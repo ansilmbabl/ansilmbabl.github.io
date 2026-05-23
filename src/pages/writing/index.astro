@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('writing')).filter((post) => !post.data.draft).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+---
+<BaseLayout title="Writing"><div class="page-wrap"><p class="eyebrow">Writing / Notes from the work</p><h1>Thinking in <em>public.</em></h1><p class="intro">Notes about building AI systems, evaluating them, and making them useful to the people who depend on them.</p><div class="article-list">{posts.map((post) => <a class="article-row" href={`/writing/${post.id}/`}><time>{post.data.published.toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' })}</time><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><span class="reading">{post.data.readingTime ?? 'Notes'} ↗</span></a>)}</div></div></BaseLayout>

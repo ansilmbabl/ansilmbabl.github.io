@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const career = (await getCollection('career')).sort((a, b) => a.data.order - b.data.order);
 ---
 <BaseLayout title="About">
   <div class="page-wrap">
@@ -9,6 +12,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div><p>I enjoy the space where technical decisions meet user feedback: understanding the real problem, making the system dependable, and iterating until it becomes useful.</p><div class="link-list"><a href="/main_updated.pdf">Resume <span>↗</span></a><a href="https://linkedin.com/in/ansilmbabl/">LinkedIn <span>↗</span></a><a href="https://github.com/ansilmbabl">GitHub <span>↗</span></a><a href="mailto:ansiljbs@gmail.com">Email <span>↗</span></a></div></div>
     </div>
     <div class="rule"></div><p class="eyebrow">Career history</p>
-    <div class="timeline"><div class="timeline-row"><time>SEP 2025 — NOW</time><div><h3>Data Scientist · Grid Dynamics</h3><p>Building an MCP-enabled Business Analyst system with a Visa team in Bengaluru. Working directly with business stakeholders and users on agent workflows, evaluation, reliability, and production delivery.</p></div></div><div class="timeline-row"><time>OCT 2023 — JUL 2025</time><div><h3>AI Engineer · Aptagrim Consulting</h3><p>Built GenAI, computer vision, and automation systems across pharmaceutical research, survey programming, oil and gas, trading-card grading, and internal workflow assistance.</p></div></div></div>
+    <div class="timeline">{career.map((role) => <div class="timeline-row"><time>{role.data.period}</time><div><h3>{role.data.title} · {role.data.organization}</h3><p>{role.body}</p>{role.data.location && <small>{role.data.location}</small>}</div></div>)}</div>
   </div>
 </BaseLayout>

@@ -35,7 +35,21 @@ const career = defineCollection({
     location: z.string().optional(),
     order: z.number(),
     current: z.boolean().default(false),
+    draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { writing, work, career };
+const education = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/education' }),
+  schema: z.object({
+    period: z.string(),
+    qualification: z.string(),
+    institution: z.string(),
+    detail: z.string().optional(),
+    order: z.number(),
+    current: z.boolean().default(false),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { writing, work, career, education };

@@ -1,6 +1,6 @@
 ---
 name: "Ansil M B"
-headline: "I like to dig deeper into AI."
+headline: "Digging deeper into AI"
 location: "Bengaluru, India"
 availability: "Open to thoughtful product and applied AI teams"
 interests:

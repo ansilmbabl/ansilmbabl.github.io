@@ -23,7 +23,7 @@ The site is a static Astro website deployed to GitHub Pages. It is designed as a
 
 - `/work/` — professional projects and company case studies.
 - `/projects/` — independent and personal projects.
-- `/notes/` — writing and AI catchups in one chronological stream.
+- `/blogs/` — writing and AI catchups in one chronological stream. `/notes/` remains as a compatibility route.
 - `/playground/` — interactive demos and experiments, starting with planned entries.
 - `/about/` — career and education history.
 - `/now/` — the current focus, maintained separately from the resume.

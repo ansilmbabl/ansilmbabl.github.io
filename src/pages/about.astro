@@ -7,14 +7,32 @@ const education = (await getCollection('education')).filter((entry) => !entry.da
 ---
 <BaseLayout title="About">
   <div class="page-wrap">
-    <p class="eyebrow">About / Context</p><h1>Curious about the <em>whole system.</em></h1>
+    <p class="eyebrow">About / Context</p><h1>Going deeper into AI, <em>one system at a time.</em></h1>
     <div class="about-grid">
       <div><p>I’m an AI/ML Engineer and Data Scientist based in Bengaluru. I build systems that connect models to data, APIs, tools, and people—not just isolated demos.</p><p>My work has moved across financial services, pharmaceutical research, market research, oil and gas, trading-card intelligence, and internal workflow automation.</p></div>
       <div><p>I enjoy the space where technical decisions meet user feedback: understanding the real problem, making the system dependable, and iterating until it becomes useful.</p><div class="link-list"><a href="/resume.pdf">Resume <span>↗</span></a><a href="https://linkedin.com/in/ansilmbabl/">LinkedIn <span>↗</span></a><a href="https://github.com/ansilmbabl">GitHub <span>↗</span></a><a href="mailto:ansiljbs@gmail.com">Email <span>↗</span></a></div></div>
     </div>
     <div class="rule"></div><p class="eyebrow">Career history</p>
-    <div class="timeline">{career.map((role) => <div class="timeline-row"><time>{role.data.period}</time><div><h3>{role.data.title} · {role.data.organization}</h3><p>{role.body}</p>{role.data.location && <small>{role.data.location}</small>}</div></div>)}</div>
+    <div class="timeline journey-timeline">{career.map((role) => <div class="timeline-row"><span class="timeline-marker"></span><div class="timeline-content"><div class="timeline-top"><span class="timeline-type">WORK</span><time>{role.data.period}</time></div><h3>{role.data.title}</h3><p class="timeline-org">{role.data.organization}</p><p>{role.body}</p><div class="timeline-meta">{role.data.location && <small>{role.data.location}</small>}{role.data.current && <span class="current-badge">Current</span>}</div></div></div>)}</div>
     <div class="rule"></div><p class="eyebrow">Education</p>
-    <div class="timeline">{education.map((entry) => <div class="timeline-row"><time>{entry.data.period}</time><div><h3>{entry.data.qualification}</h3><p>{entry.data.institution}</p>{entry.data.detail && <small>{entry.data.detail}</small>}</div></div>)}</div>
+    <div class="timeline journey-timeline">{education.map((entry) => <div class="timeline-row"><span class="timeline-marker"></span><div class="timeline-content"><div class="timeline-top"><span class="timeline-type">EDUCATION</span><time>{entry.data.period}</time></div><h3>{entry.data.qualification}</h3><p class="timeline-org">{entry.data.institution}</p>{entry.data.detail && <p>{entry.data.detail}</p>}<div class="timeline-meta">{entry.data.current && <span class="current-badge">Current</span>}</div></div></div>)}</div>
   </div>
 </BaseLayout>
+
+<style>
+  .journey-timeline { position:relative; margin-top:45px; border-top:0; padding-left:32px; }
+  .journey-timeline::before { content:""; position:absolute; left:7px; top:7px; bottom:20px; width:1px; background:var(--line); }
+  .journey-timeline .timeline-row { position:relative; display:block; padding:0 0 38px; border-bottom:0; }
+  .journey-timeline .timeline-row:last-child { padding-bottom:8px; }
+  .timeline-marker { position:absolute; left:-32px; top:6px; width:15px; height:15px; border:3px solid var(--paper); border-radius:50%; background:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .timeline-content { max-width:720px; padding:0 0 25px; border-bottom:1px solid var(--line); }
+  .journey-timeline .timeline-row:last-child .timeline-content { border-bottom:0; }
+  .timeline-top { display:flex; justify-content:space-between; gap:20px; margin-bottom:13px; color:var(--muted); font-size:11px; }
+  .timeline-type { color:var(--accent); font-weight:700; letter-spacing:.12em; }
+  .timeline-content h3 { font-size:25px; }
+  .timeline-content .timeline-org { margin:5px 0 9px; color:var(--ink); font-size:14px; font-weight:600; }
+  .timeline-content p:not(.timeline-org) { max-width:650px; margin:0; color:#5d655d; font-size:14px; }
+  .timeline-meta { display:flex; align-items:center; gap:12px; margin-top:14px; color:var(--muted); }
+  .current-badge { padding:3px 8px; border:1px solid #a4c7ba; border-radius:999px; color:var(--accent); font-size:10px; }
+  @media (max-width:700px) { .timeline-top { display:block; }.timeline-top time { display:block; margin-top:4px; }.timeline-content h3 { font-size:22px; } }
+</style>

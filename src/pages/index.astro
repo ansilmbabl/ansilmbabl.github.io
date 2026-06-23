@@ -27,7 +27,7 @@ const playground = (await getCollection('playground')).filter((entry) => entry.d
     </div>
 
     <div class="rule"></div>
-    <div class="interest-block"><div><p class="eyebrow">The wider curiosity</p><h2>Applied AI, research, and the space <em>between them.</em></h2></div><div><p class="copy">I’m interested in how people learn difficult things, how interfaces change the way we think, and how small tools can make a day feel less complicated.</p><div class="interest-tags">{(profile?.data.interests ?? []).map((interest) => <span>{interest}</span>)}</div></div></div>
+    <div class="interest-block"><div><p class="eyebrow">What I’m drawn to</p><h2>Research enough to understand it. Engineer enough to make it <em>useful.</em></h2></div><div><p class="copy">My work sits between AI research and applied engineering. I like going deep into how models and systems work, designing architectures around them, and turning promising ideas into reliable, efficient solutions for real business problems.</p><div class="interest-tags">{(profile?.data.interests ?? []).map((interest) => <span>{interest}</span>)}</div></div></div>
   </div>
 </BaseLayout>
 

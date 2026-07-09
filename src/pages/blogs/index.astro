@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-const writing = (await getCollection('writing')).filter((post) => !post.data.draft).map((post) => ({ ...post, kind: 'Blog', href: `/writing/${post.id}/`, date: post.data.published }));
+const writing = (await getCollection('writing')).filter((post) => !post.data.draft).map((post) => ({ ...post, kind: 'Blog', href: `/blogs/${post.id}/`, date: post.data.published }));
 const catchups = (await getCollection('catchups')).filter((post) => !post.data.draft).map((post) => ({ ...post, kind: 'AI catchup', href: `/catchups/${post.id}/`, date: post.data.published }));
 const entries = [...writing, ...catchups].sort((a, b) => b.date.valueOf() - a.date.valueOf());
 ---

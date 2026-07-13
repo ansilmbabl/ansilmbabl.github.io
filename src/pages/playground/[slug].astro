@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const experiments = await getCollection('playground');
+  return experiments.filter((item) => !item.data.draft).map((item) => ({ params: { slug: item.id }, props: { item } }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+---
+
+<BaseLayout title={item.data.title} description={item.data.description}>
+  <div class="page-wrap playground-detail">
+    <header class="playground-header">
+      <div><p class="eyebrow">{item.data.kind} · {item.data.status}</p><h1>{item.data.title}</h1><p class="intro">{item.data.description}</p></div>
+      <a class="back-link" href="/playground/">← All experiments</a>
+    </header>
+
+    {item.id === 'local-agent-catchup' && <section class="demo demo-catchup" aria-label="Daily AI catchup demo">
+      <div class="demo-top"><div><span class="demo-kicker">SIMULATED PUBLIC RUN · 10 NOV 2026</span><h2>What changed in AI that is worth understanding?</h2></div><span class="demo-status">HUMAN REVIEWED</span></div>
+      <div class="catchup-controls"><button class="demo-button active" data-catchup="signal">Signal</button><button class="demo-button" data-catchup="agents">Agent trail</button><button class="demo-button" data-catchup="sources">Sources</button></div>
+      <div class="catchup-panel" data-panel="signal"><p class="eyebrow">The signal</p><p class="demo-lead">The interesting shift is not another model release. It is the growing importance of systems that can show their sources, admit uncertainty, and recover when a tool fails.</p><div class="demo-stats"><span><b>18</b> sources collected</span><span><b>5</b> sources retained</span><span><b>3</b> agents involved</span></div></div>
+      <div class="catchup-panel hidden" data-panel="agents"><p class="eyebrow">The agent trail</p><div class="trace"><div><b>01 · Researcher</b><span>Collected and clustered public sources</span></div><div><b>02 · Critic</b><span>Removed duplicated and weakly sourced claims</span></div><div><b>03 · Synthesizer</b><span>Prepared a short explanation with uncertainty intact</span></div></div></div>
+      <div class="catchup-panel hidden" data-panel="sources"><p class="eyebrow">The evidence</p><div class="source-list"><div><b>Primary source</b><span>Official release / paper</span></div><div><b>Context</b><span>Engineering explanation</span></div><div><b>Open question</b><span>What changes in practice?</span></div></div></div>
+      <div class="demo-note">This is a public interface for a reviewed summary—not a live connection to private agents or internal data.</div>
+    </section>}
+
+    {item.id === 'rag-retrieval-map' && <section class="demo demo-rag" aria-label="RAG retrieval map demo">
+      <div class="demo-top"><div><span class="demo-kicker">BROWSER-SAFE FIXTURE</span><h2>See a question move through retrieval.</h2></div><span class="demo-status">DETERMINISTIC</span></div>
+      <label class="demo-input-label" for="rag-question">Ask the public knowledge base</label><div class="demo-input-row"><input id="rag-question" value="How do we handle a weak retrieval result?" /><button class="demo-button run-rag">Run retrieval</button></div>
+      <div class="rag-flow"><div class="rag-step active"><span>01</span><b>Rewrite</b><small>Clarify intent</small></div><div class="rag-step"><span>02</span><b>Retrieve</b><small>Find candidates</small></div><div class="rag-step"><span>03</span><b>Rerank</b><small>Prioritize evidence</small></div><div class="rag-step"><span>04</span><b>Answer</b><small>Keep uncertainty</small></div></div>
+      <div class="rag-result"><div><p class="eyebrow">Retrieved evidence</p><p>When retrieval is weak, the system should narrow the answer, expose the limitation, and request more context rather than inventing confidence.</p></div><div class="score-list"><span><b>0.94</b> fallback policy</span><span><b>0.81</b> evaluation notes</span><span><b>0.42</b> unrelated context</span></div></div>
+    </section>}
+
+    {item.id === 'agent-workflow-simulator' && <section class="demo demo-agent" aria-label="Agent workflow simulator">
+      <div class="demo-top"><div><span class="demo-kicker">CONTROLLED SIMULATION</span><h2>What happens when an agent meets friction?</h2></div><span class="demo-status">NO LIVE MODEL</span></div>
+      <div class="scenario-row"><button class="demo-button active" data-scenario="normal">Normal path</button><button class="demo-button" data-scenario="timeout">Tool timeout</button><button class="demo-button" data-scenario="weak">Weak evidence</button></div>
+      <div class="agent-trace"><div class="trace-node done"><b>Planner</b><span>Break down request</span></div><div class="trace-arrow">↓</div><div class="trace-node done"><b>Retriever</b><span>Find relevant context</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="validator"><b>Validator</b><span>Check evidence and constraints</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="response"><b>Response</b><span>Return useful result</span></div></div>
+      <div class="agent-message" data-agent-message>Choose a failure mode to see how the workflow recovers.</div>
+    </section>}
+
+    <article class="playground-notes"><Content /></article>
+  </div>
+</BaseLayout>
+
+<style>
+  .playground-header { display:flex; justify-content:space-between; align-items:end; gap:35px; }.playground-header h1 { max-width:700px; }.back-link { color:var(--accent); font-size:13px; white-space:nowrap; }.demo { margin-top:75px; padding:28px; border:1px solid var(--line); background:#f1f2eb; }.demo-top { display:flex; justify-content:space-between; align-items:start; gap:30px; padding-bottom:28px; border-bottom:1px solid var(--line); }.demo-top h2 { max-width:620px; margin-top:12px; font-size:clamp(28px,4vw,44px); }.demo-kicker,.demo-status { color:var(--accent); font-size:10px; font-weight:700; letter-spacing:.12em; }.demo-status { padding:5px 8px; border:1px solid #a4c7ba; border-radius:999px; white-space:nowrap; }.demo-button { padding:9px 12px; border:1px solid var(--line); border-radius:2px; background:transparent; color:var(--ink); cursor:pointer; font-size:12px; }.demo-button:hover,.demo-button.active { border-color:var(--accent); color:var(--paper); background:var(--accent); }.catchup-controls,.scenario-row { display:flex; gap:8px; margin:22px 0; }.catchup-panel.hidden { display:none; }.demo-lead { max-width:760px; font-family:var(--serif); font-size:23px; line-height:1.45; }.demo-stats { display:flex; flex-wrap:wrap; gap:28px; margin-top:32px; color:var(--muted); font-size:12px; }.demo-stats b { display:block; color:var(--ink); font-size:26px; }.trace,.source-list { border-top:1px solid var(--line); }.trace div,.source-list div { display:flex; justify-content:space-between; gap:25px; padding:13px 0; border-bottom:1px solid var(--line); font-size:13px; }.trace span,.source-list span { color:var(--muted); }.demo-note { margin-top:28px; color:var(--muted); font-size:11px; }.demo-input-label { display:block; margin:24px 0 8px; color:var(--muted); font-size:11px; }.demo-input-row { display:flex; gap:8px; }.demo-input-row input { min-width:0; flex:1; padding:11px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font:14px Arial,sans-serif; }.rag-flow { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin:35px 0; background:var(--line); border:1px solid var(--line); }.rag-step { display:flex; flex-direction:column; gap:5px; min-height:100px; padding:14px; background:var(--paper); }.rag-step span { color:var(--accent); font-size:11px; }.rag-step b { font-size:17px; }.rag-step small { color:var(--muted); }.rag-step.active { background:#dfece4; }.rag-result { display:grid; grid-template-columns:1.4fr .6fr; gap:35px; padding-top:25px; border-top:1px solid var(--line); }.rag-result p:not(.eyebrow) { max-width:560px; margin:0; color:#4f5a52; font-family:var(--serif); font-size:18px; }.score-list { display:flex; flex-direction:column; gap:8px; color:var(--muted); font-size:12px; }.score-list b { color:var(--accent); }.agent-trace { display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr; gap:6px; align-items:center; margin:38px 0 25px; }.trace-node { min-height:105px; padding:14px; border:1px solid var(--line); background:var(--paper); }.trace-node b,.trace-node span { display:block; }.trace-node b { margin-bottom:7px; font-size:16px; }.trace-node span { color:var(--muted); font-size:12px; }.trace-node.done { border-color:#a4c7ba; }.trace-node.pending { opacity:.55; }.trace-arrow { color:var(--accent); text-align:center; }.agent-message { padding:14px; border-left:3px solid var(--accent); background:#dfece4; color:#4f5a52; font-size:13px; }.playground-notes { max-width:720px; margin:65px auto 0; font-family:var(--serif); font-size:18px; line-height:1.7; }.playground-notes h2 { margin:40px 0 14px; font-family:Arial,Helvetica,sans-serif; font-size:29px; }.playground-notes p { margin:0 0 20px; }
+  @media(max-width:700px) { .playground-header,.demo-top { display:block; }.back-link { display:inline-block; margin-top:20px; }.demo { padding:19px; }.demo-status { display:inline-block; margin-top:15px; }.rag-flow { grid-template-columns:repeat(2,1fr); }.rag-result { grid-template-columns:1fr; }.agent-trace { display:flex; flex-direction:column; align-items:stretch; }.trace-arrow { transform:rotate(0); }.demo-input-row { flex-direction:column; } }
+</style>
+
+<script>
+  const catchupButtons = document.querySelectorAll('[data-catchup]');
+  const catchupPanels = document.querySelectorAll('[data-panel]');
+  catchupButtons.forEach((button) => button.addEventListener('click', () => {
+    catchupButtons.forEach((item) => item.classList.toggle('active', item === button));
+    catchupPanels.forEach((panel) => panel.classList.toggle('hidden', panel.dataset.panel !== button.dataset.catchup));
+  }));
+
+  const ragButton = document.querySelector('.run-rag');
+  const ragSteps = document.querySelectorAll('.rag-step');
+  ragButton?.addEventListener('click', () => {
+    ragSteps.forEach((step, index) => { step.classList.toggle('active', index === 3); });
+    ragButton.textContent = 'Retrieved ✓';
+  });
+
+  const scenarioButtons = document.querySelectorAll('[data-scenario]');
+  const agentMessage = document.querySelector('[data-agent-message]');
+  const validator = document.querySelector('[data-agent-step="validator"]');
+  const response = document.querySelector('[data-agent-step="response"]');
+  scenarioButtons.forEach((button) => button.addEventListener('click', () => {
+    scenarioButtons.forEach((item) => item.classList.toggle('active', item === button));
+    validator?.classList.remove('pending'); response?.classList.remove('pending');
+    const scenario = button.dataset.scenario;
+    if (scenario === 'normal') { if (agentMessage) agentMessage.textContent = 'All checks passed. The agent returns a grounded response.'; }
+    if (scenario === 'timeout') { if (agentMessage) agentMessage.textContent = 'The retrieval tool timed out. A retry is attempted, then the workflow falls back safely.'; response?.classList.add('pending'); }
+    if (scenario === 'weak') { if (agentMessage) agentMessage.textContent = 'Evidence is weak. The validator asks for more context instead of manufacturing confidence.'; validator?.classList.add('pending'); response?.classList.add('pending'); }
+  }));
+</script>

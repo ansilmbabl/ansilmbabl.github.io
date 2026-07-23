@@ -4,6 +4,7 @@ description: "A public, human-reviewed signal from my local agents about interes
 kind: "Live experiment"
 status: "live"
 demoPath: "/playground/local-agent-catchup/"
+demo: "catchup-viewer"
 order: 1
 featured: true
 ---

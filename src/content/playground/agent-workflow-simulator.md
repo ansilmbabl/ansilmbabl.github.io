@@ -4,6 +4,7 @@ description: "Explore how a tool-using agent plans, retrieves, validates, and re
 kind: "Controlled systems simulation"
 status: "live"
 demoPath: "/playground/agent-workflow-simulator/"
+demo: "agent-workflow-simulator"
 order: 3
 featured: true
 ---

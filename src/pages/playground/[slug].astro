@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RagExplorer from '../../components/RagExplorer.astro';
+import CatchupViewer from '../../components/CatchupViewer.astro';
+import AgentWorkflowSimulator from '../../components/AgentWorkflowSimulator.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -9,6 +12,12 @@ export async function getStaticPaths() {
 
 const { item } = Astro.props;
 const { Content } = await render(item);
+const demoRegistry = {
+  'rag-explorer': RagExplorer,
+  'catchup-viewer': CatchupViewer,
+  'agent-workflow-simulator': AgentWorkflowSimulator,
+};
+const Demo = item.data.demo ? demoRegistry[item.data.demo] : undefined;
 ---
 
 <BaseLayout title={item.data.title} description={item.data.description}>
@@ -18,28 +27,7 @@ const { Content } = await render(item);
       <a class="back-link" href="/playground/">← All experiments</a>
     </header>
 
-    {item.id === 'local-agent-catchup' && <section class="demo demo-catchup" aria-label="Daily AI catchup demo">
-      <div class="demo-top"><div><span class="demo-kicker">SIMULATED PUBLIC RUN · 10 NOV 2026</span><h2>What changed in AI that is worth understanding?</h2></div><span class="demo-status">HUMAN REVIEWED</span></div>
-      <div class="catchup-controls"><button class="demo-button active" data-catchup="signal">Signal</button><button class="demo-button" data-catchup="agents">Agent trail</button><button class="demo-button" data-catchup="sources">Sources</button></div>
-      <div class="catchup-panel" data-panel="signal"><p class="eyebrow">The signal</p><p class="demo-lead">The interesting shift is not another model release. It is the growing importance of systems that can show their sources, admit uncertainty, and recover when a tool fails.</p><div class="demo-stats"><span><b>18</b> sources collected</span><span><b>5</b> sources retained</span><span><b>3</b> agents involved</span></div></div>
-      <div class="catchup-panel hidden" data-panel="agents"><p class="eyebrow">The agent trail</p><div class="trace"><div><b>01 · Researcher</b><span>Collected and clustered public sources</span></div><div><b>02 · Critic</b><span>Removed duplicated and weakly sourced claims</span></div><div><b>03 · Synthesizer</b><span>Prepared a short explanation with uncertainty intact</span></div></div></div>
-      <div class="catchup-panel hidden" data-panel="sources"><p class="eyebrow">The evidence</p><div class="source-list"><div><b>Primary source</b><span>Official release / paper</span></div><div><b>Context</b><span>Engineering explanation</span></div><div><b>Open question</b><span>What changes in practice?</span></div></div></div>
-      <div class="demo-note">This is a public interface for a reviewed summary—not a live connection to private agents or internal data.</div>
-    </section>}
-
-    {item.id === 'rag-retrieval-map' && <section class="demo demo-rag" aria-label="RAG retrieval map demo">
-      <div class="demo-top"><div><span class="demo-kicker">BROWSER-SAFE FIXTURE</span><h2>See a question move through retrieval.</h2></div><span class="demo-status">DETERMINISTIC</span></div>
-      <label class="demo-input-label" for="rag-question">Ask the public knowledge base</label><div class="demo-input-row"><input id="rag-question" value="How do we handle a weak retrieval result?" /><button class="demo-button run-rag">Run retrieval</button></div>
-      <div class="rag-flow"><div class="rag-step active"><span>01</span><b>Rewrite</b><small>Clarify intent</small></div><div class="rag-step"><span>02</span><b>Retrieve</b><small>Find candidates</small></div><div class="rag-step"><span>03</span><b>Rerank</b><small>Prioritize evidence</small></div><div class="rag-step"><span>04</span><b>Answer</b><small>Keep uncertainty</small></div></div>
-      <div class="rag-result"><div><p class="eyebrow">Retrieved evidence</p><p>When retrieval is weak, the system should narrow the answer, expose the limitation, and request more context rather than inventing confidence.</p></div><div class="score-list"><span><b>0.94</b> fallback policy</span><span><b>0.81</b> evaluation notes</span><span><b>0.42</b> unrelated context</span></div></div>
-    </section>}
-
-    {item.id === 'agent-workflow-simulator' && <section class="demo demo-agent" aria-label="Agent workflow simulator">
-      <div class="demo-top"><div><span class="demo-kicker">CONTROLLED SIMULATION</span><h2>What happens when an agent meets friction?</h2></div><span class="demo-status">NO LIVE MODEL</span></div>
-      <div class="scenario-row"><button class="demo-button active" data-scenario="normal">Normal path</button><button class="demo-button" data-scenario="timeout">Tool timeout</button><button class="demo-button" data-scenario="weak">Weak evidence</button></div>
-      <div class="agent-trace"><div class="trace-node done"><b>Planner</b><span>Break down request</span></div><div class="trace-arrow">↓</div><div class="trace-node done"><b>Retriever</b><span>Find relevant context</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="validator"><b>Validator</b><span>Check evidence and constraints</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="response"><b>Response</b><span>Return useful result</span></div></div>
-      <div class="agent-message" data-agent-message>Choose a failure mode to see how the workflow recovers.</div>
-    </section>}
+    {Demo && <Demo />}
 
     <article class="playground-notes"><Content /></article>
   </div>

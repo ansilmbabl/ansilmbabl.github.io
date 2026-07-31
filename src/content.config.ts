@@ -78,6 +78,7 @@ const playground = defineCollection({
     href: z.string().optional(),
     demoPath: z.string().optional(),
     demo: z.string().optional(),
+    immersive: z.boolean().default(false),
     order: z.number(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),

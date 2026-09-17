@@ -85,6 +85,74 @@ const playground = defineCollection({
   }),
 });
 
+const architectureComponents = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/architecture/components' }),
+  schema: z.object({
+    title: z.string(),
+    layer: z.string(),
+    category: z.string(),
+    description: z.string(),
+    solves: z.string(),
+    risks: z.string(),
+    tradeoff: z.string(),
+    questions: z.array(z.string()).default([]),
+    inputs: z.array(z.string()).default([]),
+    outputs: z.array(z.string()).default([]),
+    recommendedConnections: z.array(z.string()).default([]),
+    warningConnections: z.array(z.string()).default([]),
+    order: z.number(),
+    visibility: z.enum(['core', 'production', 'future']).default('core'),
+  }),
+});
+
+const architecturePresets = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/architecture/presets' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    components: z.array(z.string()),
+    connections: z.array(z.object({ from: z.string(), to: z.string(), kind: z.enum(['recommended', 'warning', 'neutral']).default('recommended') })).default([]),
+    lesson: z.array(z.object({
+      id: z.string(),
+      title: z.string(),
+      copy: z.string(),
+      requires: z.array(z.string()).default([]),
+      requiresConnection: z.object({ from: z.string(), to: z.string() }).optional(),
+    })).default([]),
+    order: z.number(),
+  }),
+});
+
+const architectureApps = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/architecture/apps' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    useCase: z.string(),
+    order: z.number(),
+    nodes: z.array(z.object({ id: z.string(), component: z.string(), x: z.number(), y: z.number(), label: z.string().optional() })),
+    connections: z.array(z.object({ from: z.string(), to: z.string(), label: z.string().optional() })).default([]),
+  }),
+});
+
+const architectureLessons = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/architecture/lessons' }),
+  schema: z.object({
+    title: z.string(),
+    eyebrow: z.string(),
+    summary: z.string(),
+    why: z.string(),
+    without: z.string(),
+    role: z.string(),
+    tradeoff: z.string(),
+    question: z.string(),
+    order: z.number(),
+    nodes: z.array(z.object({ id: z.string(), label: z.string(), detail: z.string(), kind: z.string(), x: z.number(), y: z.number() })),
+    connections: z.array(z.object({ from: z.string(), to: z.string(), label: z.string().optional() })).default([]),
+    highlight: z.array(z.string()).default([]),
+  }),
+});
+
 const catchups = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/catchups' }),
   schema: z.object({
@@ -108,4 +176,4 @@ const profile = defineCollection({
   }),
 });
 
-export const collections = { writing, work, career, education, projects, playground, catchups, profile };
+export const collections = { writing, work, career, education, projects, playground, architectureComponents, architecturePresets, architectureApps, architectureLessons, catchups, profile };

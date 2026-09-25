@@ -1,14 +1,15 @@
 ---
-title: Put boundaries around behavior
-eyebrow: 05 · SAFETY AND SECURITY
-summary: Add guardrails and access boundaries before the system acts at scale.
-why: A useful system must also keep private data, unsafe actions, and unsupported claims within policy.
-without: Tools may be called incorrectly, sensitive evidence may leak, and the model may present guesses as facts.
-role: Guardrails validate requests, tool calls, retrieved context, and responses. Authentication and authorization become separate layers as the application grows.
-tradeoff: Safety checks add latency and can create false positives, but they make failure behavior intentional.
-question: What must never happen, and which rules require hard enforcement outside the model?
-order: 5
+title: Decide what is allowed
+eyebrow: 07 · SAFETY AND SECURITY
+summary: Add a boundary before the assistant reads sensitive data or suggests a production action.
+why: A helpful assistant is not automatically a safe assistant. We need explicit checks around requests, retrieved content, tool calls, and responses.
+without: The assistant might reveal private information, call the wrong tool, or present a guess as a fact.
+role: A Guardrail checks whether an interaction follows the rules. In a real application, identity and authorization also decide who may access each tool or document.
+tradeoff: Checks add a little latency and may sometimes block a valid request, but they make unsafe behavior visible and intentional.
+question: What must never happen—for example, changing production from a chat—and which rule must be enforced by code?
+order: 7
 nodes:
+  - { id: ai-system, label: AI system, detail: Existing assistant path, kind: container, x: 50, y: 50, merge: [guard, agent, tools, model] }
   - { id: input, label: Input, detail: Authenticated request, kind: boundary, x: 8, y: 50 }
   - { id: guard, label: Guardrail, detail: Policy boundary, kind: safety, x: 27, y: 20 }
   - { id: agent, label: Agent, detail: Plans work, kind: core, x: 47, y: 50 }
@@ -24,4 +25,4 @@ connections:
   - { from: model, to: output, label: checked response }
 highlight: [guard]
 ---
-Guardrails reduce risk; they do not replace identity, authorization, network controls, or careful tool design.
+Guardrails reduce risk; they do not replace identity, authorization, network controls, or careful Tool design.

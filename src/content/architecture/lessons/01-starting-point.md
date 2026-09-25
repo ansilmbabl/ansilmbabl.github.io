@@ -1,20 +1,20 @@
 ---
-title: Start with a useful interaction
-eyebrow: 01 · THE SMALLEST SYSTEM
-summary: Begin with a request, a system boundary, and a response.
-why: Before adding technology, define what the user is trying to accomplish and what the system promises to return.
-without: There is no clear entry point, contract, or way to tell whether the system helped.
-role: "The Agent is a black-box starting point here: it represents the capability we will progressively open up and improve."
-tradeoff: A simple black box is easy to understand, but it hides important decisions that production systems must eventually make visible.
-question: What should this system do when it cannot confidently answer?
+title: Build the smallest POC
+eyebrow: 01 · DIRECT MODEL POC
+summary: Send a visitor’s product question directly to one Model and return its response.
+why: "The fastest way to test the idea is to build the smallest possible interaction: user question in, model response out."
+without: We do not know whether the assistant can provide any useful value for the business problem.
+role: The POC sends the question directly to a Model with a basic instruction and displays the generated response to the visitor.
+tradeoff: This is quick to build, but the Model has no approved product knowledge, no support tools, and no reliable control over its answer.
+question: Does this simple interaction solve enough of the user’s problem to justify building the next layer?
 order: 1
 nodes:
-  - { id: input, label: Input, detail: User request, kind: boundary, x: 12, y: 50 }
-  - { id: agent, label: Agent, detail: System capability, kind: core, x: 50, y: 50 }
-  - { id: output, label: Output, detail: Useful response, kind: boundary, x: 88, y: 50 }
+  - { id: input, label: Visitor question, detail: Product request, kind: boundary, x: 12, y: 50 }
+  - { id: model, label: Model, detail: Direct answer generation, kind: generation, x: 50, y: 50 }
+  - { id: output, label: Response, detail: Displayed to the user, kind: boundary, x: 88, y: 50 }
 connections:
-  - { from: input, to: agent, label: request }
-  - { from: agent, to: output, label: response }
-highlight: [agent]
+  - { from: input, to: model, label: prompt }
+  - { from: model, to: output, label: answer }
+highlight: [model]
 ---
-This is intentionally incomplete. It gives us a stable story to build on.
+This is intentionally incomplete. We are testing the product idea before adding architecture.

@@ -1,13 +1,13 @@
 ---
-title: Prepare it for production
-eyebrow: 09 · RUNTIME AND DEPLOYMENT
-summary: Put the AI system behind reliable APIs, containers, secrets, and runtime controls.
-why: A good design must be deployable, repeatable, secure, observable, and recoverable—not just correct on a developer laptop.
-without: Deployments drift, secrets leak, capacity is unpredictable, and failures are difficult to recover from.
-role: API boundaries, authentication, secrets management, Docker, Kubernetes, queues, databases, and deployment controls turn a system into an operable product.
-tradeoff: Production readiness adds platform work, but it protects reliability, security, and the ability to change safely.
-question: What must be true for this system to be safe to deploy, roll back, and operate every day?
-order: 9
+title: Wrap it as a real service
+eyebrow: 15 · RUNTIME AND DEPLOYMENT
+summary: Give the system a reliable home where other people can use it.
+why: A working local script is not yet a product. Other people need a stable API, safe secrets, repeatable deployments, and a way to recover when something fails.
+without: Every machine may be configured differently, credentials may leak, capacity is unclear, and a failed release is hard to undo.
+role: The API defines how clients call the system. Containers and a runtime package and run it consistently. CI/CD, secrets, and rollback controls make change safer.
+tradeoff: Production readiness adds platform work, but it protects the users who depend on the system and the engineers who operate it.
+question: What must be true before we let real users depend on this every day?
+order: 15
 nodes:
   - { id: client, label: Client, detail: Product or user, kind: boundary, x: 8, y: 50 }
   - { id: api, label: API boundary, detail: Auth + validation, kind: security, x: 27, y: 50 }
@@ -25,4 +25,4 @@ connections:
   - { from: deploy, to: runtime, label: release }
 highlight: [api, runtime, ops, deploy]
 ---
-This is not a claim that every application needs every platform component on day one. It is a checklist for making the important operational decisions explicit.
+This is not a claim that every application needs every platform component on day one. It is a guided checklist for making important operational decisions explicit as the system earns more users.

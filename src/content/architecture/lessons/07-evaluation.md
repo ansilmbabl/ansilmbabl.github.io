@@ -1,23 +1,28 @@
 ---
-title: Write down what “good” means
+title: Measure whether the system is good
 eyebrow: 10 · EVALUATION
-summary: Test the chatbot with realistic customer questions before trusting its answers.
+summary: Use an offline evaluation set plus runtime traces and outputs to measure whether the assistant is improving.
 why: One impressive demo does not prove that the system works for ordinary users. Evaluation gives us examples and signals we can compare after every change.
 without: A prompt edit, Model upgrade, or retrieval change could make the product worse without anyone noticing.
-role: Evaluation runs representative questions, checks the answers against a rubric, and combines automated checks with human feedback where needed.
+role: Evaluation cases run through the same AI assistant, then Evaluation reads the traces and outputs, checks answers against a rubric, and combines automated checks with human feedback where needed.
 tradeoff: Good tests take time to create and maintain, but they replace guesswork with evidence.
-question: What does a successful answer look like for this user and this business process?
+question: Which representative visitor cases should become evaluation cases, and what evidence proves that the system handled them well?
 order: 10
+legend: The live path serves a visitor; the offline lane replays Evaluation cases and uses Observability data to improve the system.
 nodes:
-  - { id: input, label: Input, detail: Test questions + traffic, kind: boundary, x: 9, y: 50 }
-  - { id: system, label: AI system, detail: Retrieval + tools + model, kind: core, x: 43, y: 50 }
-  - { id: evaluation, label: Evaluation, detail: Quality signals, kind: quality, x: 67, y: 22 }
-  - { id: output, label: Output, detail: User result, kind: boundary, x: 90, y: 50 }
+  - { id: input, label: Visitor question, detail: Representative customer case, kind: boundary, x: 8, y: 50 }
+  - { id: assistant, label: AI assistant, detail: Agent + RAG + safety + cache, kind: merged-container, x: 50, y: 50, merge: [orchestrator, fast-model, reasoning-model, prompt, retriever, reranker, sources, pipeline, embeddings, index, vector-store, tools, guard, cache, schema], dotted: false }
+  - { id: observability, label: Observability, detail: Traces and runtime signals, kind: operations, x: 50, y: 20 }
+  - { id: evaluation-cases, label: Evaluation cases, detail: Replayable visitor scenarios, kind: quality, x: 25, y: 80 }
+  - { id: evaluation, label: Evaluation, detail: Quality and regression signals, kind: quality, x: 72, y: 80 }
+  - { id: output, label: Response, detail: Answer or handoff, kind: boundary, x: 91, y: 50 }
 connections:
-  - { from: input, to: system, label: cases }
-  - { from: system, to: output, label: result }
-  - { from: system, to: evaluation, label: traces + outputs }
-  - { from: evaluation, to: system, label: feedback loop }
+  - { from: input, to: assistant, label: cases }
+  - { from: assistant, to: output, label: result }
+  - { from: assistant, to: observability, label: traces + outputs }
+  - { from: evaluation-cases, to: evaluation, label: replay }
+  - { from: observability, to: evaluation, label: measured run }
+  - { from: evaluation, to: assistant, label: feedback loop }
 highlight: [evaluation]
 ---
-Evaluation is how the team learns whether the system is helping real users.
+Evaluation is how the team learns whether the observable system is helping real users and whether a change should be kept.

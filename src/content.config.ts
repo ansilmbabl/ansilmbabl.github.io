@@ -148,6 +148,8 @@ const architectureLessons = defineCollection({
     question: z.string(),
     order: z.number(),
     showDiagram: z.boolean().default(true),
+    replaces: z.array(z.string()).default([]),
+    removesConnections: z.array(z.object({ from: z.string(), to: z.string() })).default([]),
     nodes: z.array(z.object({ id: z.string(), label: z.string(), detail: z.string(), kind: z.string(), x: z.number(), y: z.number(), merge: z.array(z.string()).default([]), dotted: z.boolean().default(false) })).default([]),
     connections: z.array(z.object({ from: z.string(), to: z.string(), label: z.string().optional() })).default([]),
     highlight: z.array(z.string()).default([]),

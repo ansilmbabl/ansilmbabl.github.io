@@ -1,26 +1,24 @@
 ---
-title: Learn from real use
-eyebrow: 18 · CONTINUOUS IMPROVEMENT
-summary: Close the loop between users, evaluation, engineering changes, and the next release.
-why: A production AI system is never finished. Real usage reveals new questions, failure cases, cost pressure, and opportunities to make the experience more useful.
-without: The system slowly falls behind user needs, while changes are driven by anecdotes instead of evidence.
-role: Feedback becomes new evaluation cases, experiments compare possible improvements, and controlled releases let the team learn safely.
-tradeoff: Continuous improvement requires time and prioritization, but it keeps the product aligned with the people who use it.
-question: What evidence would convince us that the next version is genuinely better?
+title: Group the application pipeline
+eyebrow: 18 · THE APPLICATION LAYER
+summary: Collapse the frontend, API, AI system, data, security, reliability, scalability, and feedback loop into one application boundary.
+why: The application pipeline is now a complete product surface. Before adding engineering delivery practices, we need one boundary that makes ownership and deployment scope clear.
+without: Every engineering team must reason about many unrelated application pieces separately, and it becomes unclear what a release actually changes.
+role: The Application layer owns the user-facing product path and the systems that make it useful, secure, observable, reliable, and improvable.
+tradeoff: A single boundary improves ownership and release thinking, but the internal contracts still need to remain explicit.
+question: What belongs to the application release, and which responsibilities should remain platform-owned?
 order: 18
+replaces: [frontend, api, system, data-layer, security, reliability, scalability, observability, feedback]
+legend: The Application layer is the complete product pipeline; the Security assessment remains a continuous engineering concern around it.
 nodes:
-  - { id: users, label: Users, detail: Real questions and feedback, kind: boundary, x: 10, y: 50 }
-  - { id: feedback, label: Feedback, detail: Problems worth learning from, kind: quality, x: 31, y: 20 }
-  - { id: evaluation, label: Evaluation set, detail: Repeatable test cases, kind: quality, x: 52, y: 50 }
-  - { id: experiment, label: Experiment, detail: Compare an improvement, kind: generation, x: 73, y: 20 }
-  - { id: system, label: AI service, detail: Controlled release, kind: core, x: 73, y: 75 }
-  - { id: release, label: Next release, detail: Better behavior, kind: runtime, x: 91, y: 50 }
+  - { id: users, label: Users, detail: Real questions and feedback, kind: boundary, x: 8, y: 50 }
+  - { id: application, label: Application layer, detail: Frontend + API + AI system + platform concerns, kind: merged-container, x: 52, y: 50, merge: [frontend, api, system, data-layer, security, reliability, scalability, observability, feedback] }
+  - { id: security-assessment, label: Security assessment, detail: Continuous dependency + policy checks, kind: security, x: 52, y: 80 }
+  - { id: output, label: Response, detail: Product result, kind: boundary, x: 92, y: 50 }
 connections:
-  - { from: users, to: feedback, label: report }
-  - { from: feedback, to: evaluation, label: add case }
-  - { from: evaluation, to: experiment, label: measure }
-  - { from: experiment, to: system, label: test change }
-  - { from: system, to: release, label: ship safely }
-highlight: [feedback, evaluation, experiment]
+  - { from: users, to: application, label: use product }
+  - { from: application, to: output, label: product response }
+  - { from: application, to: security-assessment, label: assess continuously }
+highlight: [application, security-assessment]
 ---
-The project becomes a learning loop: observe real use, turn it into evidence, improve deliberately, and measure again.
+The application layer is the handoff point between product engineering and the delivery/platform practices that keep it safe to change.

@@ -1,28 +1,34 @@
 ---
-title: Give the complex route a controlled Tool
+title: Give the system a controlled way to act
 eyebrow: 06 · TOOLS AND ACTIONS
-summary: Continue both model routes, then let the complex route use one explicit Tool.
-why: Simple questions can still use the fast model. A harder question may need the complex model to look up product details or prepare a support request through a controlled Tool.
-without: The complex model can describe an action, but it cannot safely perform work in another system.
-role: The Orchestrator keeps routing simple questions to the fast model. For complex questions, it sends work to the complex model, which can call a narrow Tool and use the result before answering.
-tradeoff: The system becomes more useful, but tool permissions, errors, and model-to-tool decisions now need testing and observability.
-question: Which Tool should the complex route receive first, and what must it never be allowed to do?
+summary: Collapse the knowledge path into RAG, then connect a controlled Tool to the merged Model route.
+why: The assistant can now ground an answer in approved knowledge. The next step is to let the Model complete a useful action without exposing an uncontrolled path into another system.
+without: The assistant can explain what should happen, but it cannot safely read from or write to a product system on the visitor’s behalf.
+role: RAG supplies trusted context to the merged Model tile. When the Model decides that an action is needed, it calls a narrow Tool, receives the result, and then returns a structured response.
+tradeoff: Tools make the assistant useful beyond question answering, but every tool needs an explicit contract, authorization, timeout, retry policy, and audit trail.
+question: Which action is safe to automate first, and what must the Tool refuse even when the Model asks for it?
 order: 6
+replaces: [retriever, reranker, sources, pipeline, embeddings, index, vector-store]
+removesConnections:
+  - { from: model, to: schema }
+  - { from: schema, to: output }
+legend: RAG supplies trusted context; the merged Model can call the Tool and use its result before producing the response.
 nodes:
-  - { id: input, label: Visitor question, detail: Product request, kind: boundary, x: 9, y: 50 }
-  - { id: orchestrator, label: Orchestrator, detail: Chooses the route, kind: core, x: 31, y: 50 }
-  - { id: fast-model, label: Fast model, detail: Simple product answer, kind: generation, x: 51, y: 25 }
-  - { id: reasoning-model, label: Complex model, detail: Plans the harder answer, kind: generation, x: 51, y: 55 }
-  - { id: tools, label: Tool, detail: Reads catalogue or prepares support, kind: action, x: 66, y: 80 }
-  - { id: output, label: Response, detail: Answer or handoff, kind: boundary, x: 91, y: 50 }
+  - { id: input, label: Visitor question, detail: Product request, kind: boundary, x: 7, y: 32 }
+  - { id: prompt, label: Prompt, detail: Instructions + context slot, kind: generation, x: 21, y: 32 }
+  - { id: rag, label: RAG, detail: Trusted knowledge context, kind: merged-container, x: 37, y: 32, merge: [retriever, reranker, sources, pipeline, embeddings, index, vector-store] }
+  - { id: model, label: Model, detail: Orchestration + model routing, kind: merged-container, x: 55, y: 32, merge: [orchestrator, fast-model, reasoning-model] }
+  - { id: tools, label: Tool, detail: Controlled product action, kind: action, x: 55, y: 72 }
+  - { id: schema, label: Output schema, detail: Validated response shape, kind: quality, x: 73, y: 32 }
+  - { id: output, label: Response, detail: Answer or confirmed action, kind: boundary, x: 93, y: 32 }
 connections:
-  - { from: input, to: orchestrator, label: request }
-  - { from: orchestrator, to: fast-model, label: simple route }
-  - { from: orchestrator, to: reasoning-model, label: complex route }
-  - { from: reasoning-model, to: tools, label: tool call }
-  - { from: tools, to: reasoning-model, label: result }
-  - { from: fast-model, to: output, label: answer }
-  - { from: reasoning-model, to: output, label: answer }
+  - { from: input, to: prompt, label: question }
+  - { from: prompt, to: rag, label: retrieval request }
+  - { from: rag, to: model, label: trusted context }
+  - { from: model, to: tools, label: tool call }
+  - { from: tools, to: model, label: tool result }
+  - { from: model, to: schema, label: structured result }
+  - { from: schema, to: output, label: response }
 highlight: [tools]
 ---
-The wrapper is the first useful boundary: inside it, orchestration, models, and tools work together; outside it, the product sees one AI capability.
+The system now has two clear capabilities: RAG answers from approved knowledge, while the Tool route performs a carefully bounded action. Both meet at the merged Model route.

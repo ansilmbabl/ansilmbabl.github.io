@@ -1,28 +1,28 @@
 ---
-title: Wrap it as a real service
-eyebrow: 15 · RUNTIME AND DEPLOYMENT
-summary: Give the system a reliable home where other people can use it.
-why: A working local script is not yet a product. Other people need a stable API, safe secrets, repeatable deployments, and a way to recover when something fails.
-without: Every machine may be configured differently, credentials may leak, capacity is unclear, and a failed release is hard to undo.
-role: The API defines how clients call the system. Containers and a runtime package and run it consistently. CI/CD, secrets, and rollback controls make change safer.
-tradeoff: Production readiness adds platform work, but it protects the users who depend on the system and the engineers who operate it.
-question: What must be true before we let real users depend on this every day?
-order: 15
+title: Scale the application path
+eyebrow: 16 · SCALABILITY
+summary: Add load balancing and capacity controls so the application can serve more users safely.
+why: A single application instance eventually becomes a capacity and failure boundary. Load balancing, rate limits, and replicas let the API distribute traffic without losing control of cost or reliability.
+without: One instance can become overloaded, a single failure can take down the service, and traffic spikes can make every user experience slow responses.
+role: The API receives traffic through a scalability layer that balances requests, limits abusive bursts, and routes work across healthy application replicas.
+tradeoff: More capacity improves availability, but it adds coordination, state-management, and cost decisions.
+question: What should happen when traffic doubles, one replica fails, or a request becomes too expensive?
+order: 16
+replaces: [client, client-api, system, data-layer, reliability, api, runtime, ops, deploy, scalability]
+legend: The Scalability layer distributes traffic and protects the application path as demand grows.
 nodes:
-  - { id: client, label: Client, detail: Product or user, kind: boundary, x: 8, y: 50 }
-  - { id: api, label: API boundary, detail: Auth + validation, kind: security, x: 27, y: 50 }
-  - { id: runtime, label: Container runtime, detail: Docker + Kubernetes, kind: runtime, x: 48, y: 50 }
-  - { id: system, label: AI system, detail: The application path, kind: core, x: 69, y: 50 }
-  - { id: ops, label: Operations, detail: Logs + metrics + alerts, kind: operations, x: 69, y: 20 }
-  - { id: deploy, label: Delivery, detail: CI/CD + rollback, kind: runtime, x: 69, y: 80 }
-  - { id: response, label: Response, detail: Reliable result, kind: boundary, x: 91, y: 50 }
+  - { id: frontend, label: Frontend, detail: Web or mobile visitor experience, kind: boundary, x: 8, y: 50 }
+  - { id: api, label: API layer, detail: Stable application contract, kind: security, x: 25, y: 50 }
+  - { id: scalability, label: Scalability layer, detail: Load balancer + rate limits + replicas, kind: merged-container, x: 50, y: 50, merge: [load-balancer, rate-limiter, replicas, autoscaling] }
+  - { id: system, label: AI system, detail: Application path, kind: merged-container, x: 72, y: 50, merge: [orchestrator, fast-model, reasoning-model, prompt, retriever, reranker, sources, pipeline, embeddings, index, vector-store, tools, guard, cache, schema, observability, evaluation] }
+  - { id: observability, label: Observability, detail: Access + traffic + internal traces, kind: merged-container, x: 72, y: 80, merge: [logs, metrics] }
+  - { id: output, label: Response, detail: Reliable result, kind: boundary, x: 92, y: 50 }
 connections:
-  - { from: client, to: api, label: request }
-  - { from: api, to: runtime, label: authenticated traffic }
-  - { from: runtime, to: system, label: managed workload }
-  - { from: system, to: response, label: response }
-  - { from: system, to: ops, label: telemetry }
-  - { from: deploy, to: runtime, label: release }
-highlight: [api, runtime, ops, deploy]
+  - { from: frontend, to: api, label: visitor request }
+  - { from: api, to: scalability, label: incoming traffic }
+  - { from: scalability, to: system, label: balanced workload }
+  - { from: system, to: output, label: response }
+  - { from: api, to: observability, label: traffic signals }
+highlight: [scalability]
 ---
 This is not a claim that every application needs every platform component on day one. It is a guided checklist for making important operational decisions explicit as the system earns more users.

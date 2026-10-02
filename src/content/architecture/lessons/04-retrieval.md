@@ -1,27 +1,31 @@
 ---
-title: Give it trusted knowledge
-eyebrow: 05 · RETRIEVAL
-summary: Let the chatbot look up approved product and service information before answering.
-why: A general Model does not know the company’s current product catalogue, documentation, or public support guidance. Retrieval gives it relevant evidence at the moment a visitor asks a question.
-without: The assistant may sound confident while guessing, using old information, or missing the document that contains the answer.
-role: The Retriever turns the visitor’s question into a search. The Vector DB stores approved public documents as searchable representations and returns likely matches.
-tradeoff: Retrieval makes answers more grounded, but we now need an ingestion pipeline, permissions, source references, and more latency.
-question: How will we know that the evidence is relevant and that this user is allowed to see it?
+title: Make retrieval trustworthy
+eyebrow: 05 · RETRIEVAL QUALITY
+summary: Improve the basic RAG path so the model receives the most relevant approved evidence.
+why: Finding candidate passages is not the same as finding the best context. Reranking and metadata filters help the system prioritize relevant, current, and applicable evidence.
+without: The model may receive loosely related passages, too much context, or evidence that should not be used for this request.
+role: The Retriever searches the knowledge index, the Reranker orders the candidates, and the Model receives a smaller, more useful context window.
+tradeoff: Better retrieval quality adds latency and another component to evaluate, but it reduces noise in the model’s context.
+question: Which evidence should be passed to the model, and how can we prove that it was relevant and allowed?
 order: 5
+removesConnections:
+  - { from: retriever, to: model }
+legend: The Retriever finds candidates; the Reranker chooses the context that reaches the Model.
 nodes:
-  - { id: ai-system, label: AI system, detail: Existing assistant path, kind: container, x: 52, y: 52, merge: [agent, retriever, vector-db, model] }
-  - { id: input, label: Input, detail: User question, kind: boundary, x: 9, y: 50 }
-  - { id: agent, label: Agent, detail: Orchestrates the request, kind: core, x: 30, y: 50 }
-  - { id: retriever, label: Retriever, detail: Finds evidence, kind: knowledge, x: 52, y: 30 }
-  - { id: vector, label: Vector DB, detail: Stores searchable knowledge, kind: data, x: 52, y: 76 }
-  - { id: model, label: Model, detail: Answers from context, kind: generation, x: 75, y: 50 }
-  - { id: output, label: Output, detail: Answer + sources, kind: boundary, x: 93, y: 50 }
+  - { id: input, label: Visitor question, detail: Retrieval query, kind: boundary, x: 6, y: 25 }
+  - { id: prompt, label: Prompt, detail: Instructions + context slot, kind: generation, x: 20, y: 25 }
+  - { id: retriever, label: Retriever, detail: Finds candidate evidence, kind: knowledge, x: 34, y: 25 }
+  - { id: reranker, label: Reranker, detail: Orders the best passages, kind: knowledge, x: 48, y: 25 }
+  - { id: model, label: Model, detail: Generates from selected context, kind: merged-container, x: 62, y: 25, merge: [orchestrator, fast-model, reasoning-model] }
+  - { id: schema, label: Output schema, detail: Validated response shape, kind: quality, x: 76, y: 25 }
+  - { id: output, label: Response, detail: Grounded answer + sources, kind: boundary, x: 90, y: 25 }
 connections:
-  - { from: input, to: agent, label: question }
-  - { from: agent, to: retriever, label: search intent }
-  - { from: retriever, to: vector, label: retrieve }
-  - { from: retriever, to: model, label: evidence }
-  - { from: model, to: output, label: grounded answer }
-highlight: [retriever, vector]
+  - { from: input, to: prompt, label: question }
+  - { from: prompt, to: retriever, label: search intent }
+  - { from: retriever, to: reranker, label: candidates }
+  - { from: reranker, to: model, label: selected context }
+  - { from: model, to: schema, label: structured result }
+  - { from: schema, to: output, label: grounded answer }
+highlight: [reranker]
 ---
 This is the point where a conversational demo starts becoming a knowledge system.

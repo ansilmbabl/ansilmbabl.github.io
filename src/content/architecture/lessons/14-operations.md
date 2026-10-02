@@ -1,26 +1,29 @@
 ---
-title: Give the team a way to operate it
-eyebrow: 17 · PRODUCTION OPERATIONS
-summary: Turn system behavior into dashboards, alerts, and runbooks that people can use.
-why: Production users do not report architecture diagrams. They report slow answers, missing data, and failed actions. The team needs signals that connect those symptoms to causes.
+title: Close the feedback loop
+eyebrow: 17 · CONTINUOUS FEEDBACK
+summary: Turn real user behavior into feedback, evaluation cases, experiments, and controlled updates.
+why: A deployed application improves only when real usage becomes evidence. Feedback should become repeatable evaluation cases and controlled experiments instead of isolated anecdotes.
 without: Incidents become guesswork, alerts arrive too late, and every failure requires rediscovering how the system works.
-role: Dashboards show health, alerts call attention to meaningful changes, and runbooks explain the first safe actions during an incident.
+role: The feedback loop collects user signals, adds evaluation cases, compares experiments, and sends only tested changes back to the application.
 tradeoff: Operational discipline takes time, but it reduces recovery time and makes support less dependent on one person.
-question: Which signal should wake someone up, and what should they do first when it happens?
+question: Which user signal should become a new evaluation case, and what evidence is enough to ship an improvement?
 order: 17
+replaces: [request, system, dashboard, alerts, runbook, team, operations, feedback]
+legend: The Feedback loop turns real usage into evidence and sends tested improvements back to the application.
 nodes:
-  - { id: request, label: User request, detail: Real traffic, kind: boundary, x: 10, y: 50 }
-  - { id: system, label: AI service, detail: Runtime behavior, kind: core, x: 38, y: 50 }
-  - { id: dashboard, label: Dashboard, detail: Health and trends, kind: operations, x: 63, y: 20 }
-  - { id: alerts, label: Alerts, detail: Important changes, kind: operations, x: 63, y: 50 }
-  - { id: runbook, label: Runbook, detail: Safe response steps, kind: quality, x: 63, y: 80 }
-  - { id: team, label: Engineering team, detail: Learns and responds, kind: boundary, x: 89, y: 50 }
+  - { id: frontend, label: Frontend, detail: Web or mobile visitor experience, kind: boundary, x: 8, y: 50 }
+  - { id: api, label: API layer, detail: Stable application contract, kind: security, x: 24, y: 50 }
+  - { id: scalability, label: Scalability layer, detail: Load balancing + capacity controls, kind: merged-container, x: 43, y: 50, merge: [load-balancer, rate-limiter, replicas, autoscaling] }
+  - { id: system, label: AI system, detail: Application path, kind: merged-container, x: 64, y: 50, merge: [orchestrator, fast-model, reasoning-model, prompt, retriever, reranker, sources, pipeline, embeddings, index, vector-store, tools, guard, cache, schema, observability, evaluation] }
+  - { id: feedback, label: Feedback loop, detail: Users + evaluation + experiments, kind: merged-container, x: 64, y: 80, merge: [user-feedback, evaluation-cases, experiment, release] }
+  - { id: output, label: Response, detail: Improved answer or handoff, kind: boundary, x: 92, y: 50 }
 connections:
-  - { from: request, to: system, label: traffic }
-  - { from: system, to: dashboard, label: metrics }
-  - { from: system, to: alerts, label: thresholds }
-  - { from: alerts, to: team, label: notify }
-  - { from: runbook, to: team, label: guide }
-highlight: [dashboard, alerts, runbook]
+  - { from: frontend, to: api, label: visitor request }
+  - { from: api, to: scalability, label: traffic }
+  - { from: scalability, to: system, label: balanced workload }
+  - { from: system, to: output, label: response }
+  - { from: output, to: feedback, label: real usage }
+  - { from: feedback, to: system, label: tested improvement }
+highlight: [feedback]
 ---
 An AI system is production-ready only when a team can understand and support it after the original author is unavailable.

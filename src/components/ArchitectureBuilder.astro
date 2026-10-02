@@ -8,16 +8,17 @@ const firstIsScenario = firstLesson?.showDiagram === false;
 ---
 
 <section class="architecture-builder" aria-label="AI systems learning journey">
-  <header class="builder-hero"><div><span class="builder-kicker">AI SYSTEMS · INTERACTIVE LEARNING</span><h2>How production AI systems are built.</h2><p>Follow one system from a business problem to a production-ready service. Each stage adds one engineering decision, shows the limitation it solves, and carries the architecture forward.</p></div><div class="hero-note"><span>00–18</span><p>One system<br /><em>built in stages.</em></p></div></header>
+  <header class="builder-hero"><div><span class="builder-kicker">AI SYSTEMS · INTERACTIVE LEARNING</span><h2>How production AI systems are built.</h2><p>Follow one system from a business problem to a production-ready service. Each stage adds one engineering decision, shows the limitation it solves, and carries the architecture forward.</p></div><div class="hero-note"><span>00–20</span><p>One system<br /><em>built in stages.</em></p></div></header>
 
   <div class="story-layout">
-    <aside class="lesson-rail"><div class="rail-heading"><span class="builder-kicker">THE SYSTEM STORY</span><small data-progress>STAGE 00</small></div><nav data-lesson-list aria-label="Architecture lessons">{lessons.map((lesson, index) => <button type="button" class="lesson-link" data-index={index}><span>STAGE {String(lesson.order).padStart(2, '0')}</span>{lesson.title}</button>)}</nav></aside>
+    <aside class="lesson-rail"><div class="rail-heading"><span class="builder-kicker">THE SYSTEM STORY</span><small data-progress>STAGE 00</small></div><nav data-lesson-list aria-label="Architecture lessons">{lessons.map((lesson, index) => <Fragment>{lesson.order === 0 && <div class="lesson-group-label">AI system layer</div>}{lesson.order === 11 && <div class="lesson-group-label">Application layer</div>}{lesson.order === 19 && <div class="lesson-group-label">Engineering + platform layer</div>}<button type="button" class="lesson-link" data-index={index}><span>STAGE {String(lesson.order).padStart(2, '0')}</span>{lesson.title}</button></Fragment>)}</nav></aside>
     <main class="lesson-main">
       <section class="lesson-heading"><span class="builder-kicker" data-lesson-eyebrow>{firstLesson?.eyebrow}</span><h1 data-lesson-title>{firstLesson?.title}</h1><p data-lesson-summary>{firstLesson?.summary}</p></section>
       <section class="lesson-explanation"><div><span class="builder-kicker">WHY THIS LAYER EXISTS</span><h2 data-lesson-why>{firstLesson?.why}</h2><p data-lesson-without>Without this layer: {firstLesson?.without}</p></div><div class="lesson-details"><div><small>IN THE SYSTEM</small><p data-lesson-role>{firstLesson?.role}</p></div><div><small>DESIGN TRADE-OFF</small><p data-lesson-tradeoff>{firstLesson?.tradeoff}</p></div><div class="reflection"><small>QUESTION TO CARRY FORWARD</small><p data-lesson-question>{firstLesson?.question}</p></div></div></section>
       <section class="scenario-brief" data-scenario-brief hidden={!firstIsScenario}><span class="builder-kicker">THE BUSINESS PROBLEM</span><h2>One public chatbot, many customer questions.</h2><p>People visiting the company website should be able to ask about products and services, find approved public guidance, and get help contacting support. The first engineering task is to understand the customer job before choosing the architecture.</p><div class="scenario-columns"><div><small>THE USER</small><p>A customer or visitor who wants a clear answer without searching through the entire website.</p></div><div><small>THE PROMISE</small><p>Helpful guidance grounded in published company information, with a clear handoff when the chatbot cannot answer.</p></div><div><small>SUCCESS</small><p>Useful, grounded, fast answers with clear escalation when confidence or authority is insufficient.</p></div><div><small>THE BOUNDARY</small><p>The assistant may help prepare a support request, but account-specific or irreversible actions remain controlled.</p></div></div></section>
       <section class="lesson-diagram-panel" data-lesson-diagram hidden={firstIsScenario}><div class="panel-label"><span>HOW THE SYSTEM FITS TOGETHER</span><span data-lesson-legend hidden></span><span>Step-by-step view</span></div><div class="diagram-toolbar"><span>Case: answer a company question and help with the next action</span><div class="zoom-controls" role="group" aria-label="Diagram zoom controls"><button type="button" data-zoom-out aria-label="Zoom out">−</button><span data-zoom-level>100%</span><button type="button" data-zoom-reset>Reset</button><button type="button" data-zoom-in aria-label="Zoom in">+</button></div></div><div class="lesson-viewport" data-lesson-viewport><div class="lesson-canvas" data-lesson-canvas><div class="lesson-stage"><svg class="lesson-edges" data-lesson-edges viewBox="0 0 1400 820" aria-hidden="true"><defs><marker id="lesson-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 z" fill="#176b58"></path></marker></defs></svg><div class="lesson-nodes" data-lesson-nodes></div></div></div></div><div class="diagram-help"><span>request flow →</span><span>Click a component to inspect it</span><span>Scroll to explore the map</span></div></section>
       <section class="selected-note" data-selected-note hidden={firstIsScenario}><span class="builder-kicker">SELECTED COMPONENT</span><h3 data-selected-title>Start with the diagram</h3><p data-selected-copy>Each new layer exists to solve a specific problem. Select a component to see its role in the larger system.</p><div class="selected-facts"><div><small>ROLE</small><p data-selected-role>—</p></div><div><small>FAILURE TO WATCH</small><p data-selected-risk>—</p></div><div><small>TRADE-OFF</small><p data-selected-tradeoff>—</p></div></div></section>
+      <section class="compound-inspector" data-compound-inspector hidden><div class="compound-inspector-head"><div><span class="builder-kicker">INSIDE THIS SYSTEM TILE</span><h3 data-compound-title>AI assistant</h3><p data-compound-copy>These components were combined into one reusable system boundary.</p></div><button type="button" data-close-compound>Back to current stage</button></div><div class="compound-tiles" data-compound-tiles></div></section>
       <div class="lesson-navigation"><button type="button" data-previous>← Previous</button><button type="button" class="next-lesson" data-next>Next layer →</button></div>
     </main>
   </div>
@@ -65,7 +66,24 @@ const firstIsScenario = firstLesson?.showDiagram === false;
   .lesson-node.dotted-component{outline:1px dotted var(--node-color,#176b58);outline-offset:9px}
   .lesson-node.lesson-merged-group{width:178px;min-height:82px;border-width:2px;background:#eef6ef;box-shadow:3px 3px 0 rgba(39,76,58,.08)}
   .lesson-node.lesson-merged-group b{color:#176b58}
+  .lesson-node.compound-tile{border-width:2px;border-style:dotted;background:#eef6ef;cursor:pointer}
+  .compound-count{display:block;margin-bottom:8px;color:#176b58;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .compound-inspector{margin-top:16px;padding:18px;border:1px solid #a4c7ba;background:#f1f5ed}
+  .compound-inspector-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+  .compound-inspector-head h3{margin:9px 0 5px;font-size:24px}
+  .compound-inspector-head p{margin:0;color:#4f5a52;font-size:13px;line-height:1.45}
+  .compound-inspector-head button{padding:8px 10px;border:1px solid #a4c7ba;background:transparent;color:var(--accent);cursor:pointer;font-size:11px;white-space:nowrap}
+  .compound-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:16px;padding-top:14px;border-top:1px solid #a4c7ba}
+  .compound-tile-detail{padding:11px;border:1px solid var(--tile-color,#87a995);background:var(--paper)}
+  .compound-tile-detail b{display:block;font-size:12px}.compound-tile-detail small{display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.35}
+  @media(max-width:600px){.compound-inspector-head{display:block}.compound-inspector-head button{margin-top:12px}}
   .panel-label [data-lesson-legend]{margin-left:auto;color:#6f5870;font-weight:400;letter-spacing:0;text-transform:none}
+</style>
+
+<style is:global>
+  .lesson-group-label{margin:18px 8px 4px;padding-top:12px;border-top:1px solid var(--line);color:var(--accent);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .lesson-group-label:first-child{margin-top:10px;border-top:0;padding-top:0}
+  @media(max-width:850px){.lesson-group-label{margin:0 10px;padding:12px 0 0;border-top:0;white-space:nowrap}}
 </style>
 
 <script define:vars={{ lessons, componentCatalog }}>
@@ -74,10 +92,12 @@ const firstIsScenario = firstLesson?.showDiagram === false;
   const colors = { boundary: '#7d4f73', core: '#176b58', generation: '#176b58', action: '#8a633a', knowledge: '#47765b', data: '#47765b', safety: '#a66d3b', performance: '#637747', quality: '#4d687f', operations: '#4d687f', security: '#a66d3b', runtime: '#637747' };
   let activeIndex = 0;
   let diagramZoom = 1;
+  let didFitDiagram = false;
   const nodes = document.querySelector('[data-lesson-nodes]');
   const edges = document.querySelector('[data-lesson-edges]');
   const stage = document.querySelector('.lesson-stage');
   const canvas = document.querySelector('[data-lesson-canvas]');
+  const viewport = document.querySelector('[data-lesson-viewport]');
   const zoomLevel = document.querySelector('[data-zoom-level]');
   const diagramPanel = document.querySelector('[data-lesson-diagram]');
   const selectedNote = document.querySelector('[data-selected-note]');
@@ -92,6 +112,24 @@ const firstIsScenario = firstLesson?.showDiagram === false;
     const graphConnections = [];
     const connectionKeys = new Set();
     lessonData.slice(1, index + 1).forEach((item) => {
+      item.replaces.forEach((rawId) => {
+        const id = canonicalId(rawId);
+        byId.delete(id);
+        const nodeIndex = graphNodes.findIndex((node) => node.id === id);
+        if (nodeIndex >= 0) graphNodes.splice(nodeIndex, 1);
+        for (let i = graphConnections.length - 1; i >= 0; i -= 1) {
+          if (graphConnections[i].from === id || graphConnections[i].to === id) graphConnections.splice(i, 1);
+        }
+        [...connectionKeys].forEach((key) => { if (key.startsWith(`${id}|`) || key.includes(`|${id}|`)) connectionKeys.delete(key); });
+      });
+      item.removesConnections.forEach((connection) => {
+        const from = canonicalId(connection.from);
+        const to = canonicalId(connection.to);
+        for (let i = graphConnections.length - 1; i >= 0; i -= 1) {
+          if (graphConnections[i].from === from && graphConnections[i].to === to) graphConnections.splice(i, 1);
+        }
+        [...connectionKeys].forEach((key) => { if (key.startsWith(`${from}|${to}|`)) connectionKeys.delete(key); });
+      });
       item.nodes.filter((node) => !isDiagramMarker(node)).forEach((node) => {
         const id = canonicalId(node.id);
         const next = { ...node, id };
@@ -99,7 +137,7 @@ const firstIsScenario = firstLesson?.showDiagram === false;
         if (!existing) {
           byId.set(id, next);
           graphNodes.push(next);
-        } else if (node.kind === 'merged-container' || id === 'ai-assistant') {
+        } else {
           Object.assign(existing, next);
         }
       });
@@ -117,7 +155,7 @@ const firstIsScenario = firstLesson?.showDiagram === false;
     graphNodes.forEach((node) => {
       let x = node.x;
       let y = node.y;
-      while (placed.some((other) => Math.abs(other.x - x) < 14 && Math.abs(other.y - y) < 16)) {
+      while (placed.some((other) => Math.abs(other.x - x) < 10 && Math.abs(other.y - y) < 16)) {
         y += 15;
         if (y > 88) { y = 14; x += 12; }
       }
@@ -127,8 +165,27 @@ const firstIsScenario = firstLesson?.showDiagram === false;
     });
     return { nodes: graphNodes, connections: graphConnections };
   };
+  const getCompoundGraph = (index) => {
+    const graph = getCumulativeGraph(index);
+    if (index < 9) return graph;
+    const active = new Set(lessonData[index].highlight.map(canonicalId));
+    const collapsed = new Set(['orchestrator', 'fast-model', 'reasoning-model', 'prompt', 'model', 'rag', 'retriever', 'reranker', 'sources', 'pipeline', 'embeddings', 'index', 'vector-store', 'tools', 'guard', 'cache', 'evaluation']);
+    const visibleNodes = graph.nodes.filter((node) => !collapsed.has(node.id) || active.has(node.id) || node.id === 'ai-assistant');
+    const visibleIds = new Set(visibleNodes.map((node) => node.id));
+    const edgeKeys = new Set();
+    const visibleConnections = [];
+    graph.connections.forEach((connection) => {
+      const from = collapsed.has(connection.from) && !active.has(connection.from) ? 'ai-assistant' : connection.from;
+      const to = collapsed.has(connection.to) && !active.has(connection.to) ? 'ai-assistant' : connection.to;
+      if (from === to || !visibleIds.has(from) || !visibleIds.has(to)) return;
+      const key = `${from}|${to}|${connection.label ?? ''}`;
+      if (!edgeKeys.has(key)) { edgeKeys.add(key); visibleConnections.push({ ...connection, from, to }); }
+    });
+    return { nodes: visibleNodes, connections: visibleConnections };
+  };
 
   const setSelected = (node, item) => {
+    document.querySelector('[data-compound-inspector]').hidden = true;
     document.querySelectorAll('.lesson-node').forEach((element) => element.classList.toggle('active', element.dataset.nodeId === node.id));
     const source = components[node.id];
     document.querySelector('[data-selected-title]').textContent = node.label;
@@ -136,6 +193,25 @@ const firstIsScenario = firstLesson?.showDiagram === false;
     document.querySelector('[data-selected-role]').textContent = source?.solves ?? node.detail;
     document.querySelector('[data-selected-risk]').textContent = source?.risks ?? item.without;
     document.querySelector('[data-selected-tradeoff]').textContent = source?.tradeoff ?? item.tradeoff;
+  };
+
+  const openCompound = (node, item) => {
+    const inspector = document.querySelector('[data-compound-inspector]');
+    const title = document.querySelector('[data-compound-title]');
+    const copy = document.querySelector('[data-compound-copy]');
+    const tiles = document.querySelector('[data-compound-tiles]');
+    title.textContent = node.label;
+    copy.textContent = `${node.label} combines ${node.merge?.length ?? 0} components from the earlier stages.`;
+    tiles.replaceChildren(...(node.merge ?? []).map((id) => {
+      const source = components[id] ?? lessonData.flatMap((entry) => entry.nodes).find((entry) => canonicalId(entry.id) === canonicalId(id));
+      const tile = document.createElement('div');
+      tile.className = 'compound-tile-detail';
+      tile.style.setProperty('--tile-color', colors[source?.category ?? source?.kind] ?? '#176b58');
+      tile.innerHTML = `<b>${source?.title ?? source?.label ?? id}</b><small>${source?.description ?? source?.detail ?? 'A component carried into this system boundary.'}</small>`;
+      return tile;
+    }));
+    inspector.hidden = false;
+    inspector.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   const drawEdges = (lesson, connections = lesson.connections) => {
@@ -185,18 +261,30 @@ const firstIsScenario = firstLesson?.showDiagram === false;
   };
 
   const setZoom = (value) => {
-    diagramZoom = Math.max(0.7, Math.min(1.5, value));
+    diagramZoom = Math.max(0.45, Math.min(1.5, value));
     stage.style.transform = `scale(${diagramZoom})`;
     canvas.style.width = `${1400 * diagramZoom}px`;
     canvas.style.height = `${820 * diagramZoom}px`;
     zoomLevel.textContent = `${Math.round(diagramZoom * 100)}%`;
-    requestAnimationFrame(() => drawEdges(lessonData[activeIndex], getCumulativeGraph(activeIndex).connections));
+    requestAnimationFrame(() => drawEdges(lessonData[activeIndex], getCompoundGraph(activeIndex).connections));
+  };
+  const fitZoom = () => {
+    const widthFit = (viewport.clientWidth - 12) / 1400;
+    const heightFit = (viewport.clientHeight - 12) / 820;
+    setZoom(Math.min(1, widthFit, heightFit));
   };
 
   const renderLesson = (index) => {
     activeIndex = Math.max(0, Math.min(index, lessonData.length - 1));
     const lesson = lessonData[activeIndex];
-    const graph = getCumulativeGraph(activeIndex);
+    const graph = getCompoundGraph(activeIndex);
+    if (lesson.order === 10) {
+      const fixedStageTenLayout = { 'ai-assistant': [50, 50], observability: [50, 20], evaluation: [50, 80] };
+      graph.nodes.forEach((node) => {
+        const position = fixedStageTenLayout[node.id];
+        if (position) [node.x, node.y] = position;
+      });
+    }
     const showDiagram = lesson.showDiagram !== false;
     diagramPanel.hidden = !showDiagram;
     selectedNote.hidden = !showDiagram;
@@ -220,23 +308,30 @@ const firstIsScenario = firstLesson?.showDiagram === false;
     document.querySelectorAll('.lesson-link').forEach((link) => link.classList.toggle('active', Number(link.dataset.index) === activeIndex));
     nodes.replaceChildren(...graph.nodes.map((node) => {
       const element = document.createElement('button');
-      element.type = 'button'; element.className = `lesson-node${node.kind === 'container' ? ' lesson-group' : ''}${node.kind === 'container-wide' ? ' lesson-group-wide' : ''}${node.kind === 'boundary-container' ? ' lesson-boundary-group' : ''}${node.kind === 'merged-container' ? ' lesson-merged-group' : ''}${node.kind !== 'merged-container' && (node.dotted || mergeTargets.has(node.id) || activeHighlights.has(node.id)) ? ' dotted-component' : ''}${activeHighlights.has(node.id) ? ' new-layer' : ''}`;
+      element.type = 'button'; element.className = `lesson-node${node.kind === 'container' ? ' lesson-group' : ''}${node.kind === 'container-wide' ? ' lesson-group-wide' : ''}${node.kind === 'boundary-container' ? ' lesson-boundary-group' : ''}${node.kind === 'merged-container' ? ' lesson-merged-group compound-tile' : ''}${activeHighlights.has(node.id) ? ' new-layer' : ''}`;
       element.dataset.nodeId = node.id; element.style.left = `${node.x}%`; element.style.top = `${node.y}%`;
       element.style.setProperty('--node-color', colors[node.kind] ?? '#176b58');
       const source = components[node.id];
       const mergedComponents = (node.merge ?? []).map((id) => components[id] ?? lesson.nodes.find((item) => item.id === id)).filter(Boolean);
-      if (node.kind === 'container' || node.kind === 'container-wide' || node.kind === 'boundary-container') {
+      if (node.kind === 'merged-container') {
+        element.innerHTML = `<span class="compound-count">${node.merge?.length ?? 0} components · click to inspect</span><b>${node.label}</b><small>${node.detail}</small>`;
+      } else if (node.kind === 'container' || node.kind === 'container-wide' || node.kind === 'boundary-container') {
         const markers = mergedComponents.map((item) => `<i title="${item.title ?? item.label}" style="--merge-color:${colors[item.category ?? item.kind] ?? '#176b58'}"></i>`).join('');
         element.innerHTML = `<span class="merge-indicator"><span class="merge-markers" aria-hidden="true">${markers}</span><b>${node.label}</b><small>${node.detail}</small></span>`;
       } else {
-        element.innerHTML = `<b>${node.label}</b><small>${node.detail}</small><em>${source?.layer ?? node.kind}</em>`;
+        const layer = lesson.order === 1 && node.id === 'model' ? '' : (source?.layer ?? node.kind);
+        element.innerHTML = `<b>${node.label}</b><small>${node.detail}</small>${layer ? `<em>${layer}</em>` : ''}`;
       }
-      element.addEventListener('click', () => setSelected(node, lesson));
+      element.addEventListener('click', () => {
+        setSelected(node, lesson);
+        if (node.kind === 'merged-container' && node.merge?.length) openCompound(node, lesson);
+      });
       return element;
     }));
     drawEdges(lesson, graph.connections);
     const first = graph.nodes.find((node) => activeHighlights.has(node.id)) ?? graph.nodes[0];
     if (first) setSelected(first, lesson);
+    if (showDiagram && !didFitDiagram) requestAnimationFrame(() => { fitZoom(); didFitDiagram = true; });
   };
 
   document.querySelectorAll('.lesson-link').forEach((link) => link.addEventListener('click', () => renderLesson(Number(link.dataset.index))));
@@ -245,6 +340,7 @@ const firstIsScenario = firstLesson?.showDiagram === false;
   document.querySelector('[data-zoom-out]').addEventListener('click', () => setZoom(diagramZoom - 0.1));
   document.querySelector('[data-zoom-reset]').addEventListener('click', () => setZoom(1));
   document.querySelector('[data-zoom-in]').addEventListener('click', () => setZoom(diagramZoom + 0.1));
-  window.addEventListener('resize', () => drawEdges(lessonData[activeIndex], getCumulativeGraph(activeIndex).connections));
+  document.querySelector('[data-close-compound]').addEventListener('click', () => { document.querySelector('[data-compound-inspector]').hidden = true; });
+  window.addEventListener('resize', () => drawEdges(lessonData[activeIndex], getCompoundGraph(activeIndex).connections));
   renderLesson(0);
 </script>

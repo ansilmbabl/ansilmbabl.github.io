@@ -8,6 +8,7 @@ role: The Orchestrator reads the request, selects a route, adds basic instructio
 tradeoff: Routing can improve cost and quality, but it adds another decision that must be tested and observed.
 question: What signals tell us which model or workflow is the right fit for this request?
 order: 2
+replaces: [model]
 nodes:
   - { id: input, label: Visitor question, detail: Product request, kind: boundary, x: 9, y: 50 }
   - { id: orchestrator, label: Orchestrator, detail: Understands and routes, kind: core, x: 35, y: 50 }

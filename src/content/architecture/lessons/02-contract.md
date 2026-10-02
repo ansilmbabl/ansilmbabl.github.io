@@ -1,26 +1,24 @@
 ---
-title: Expose the assistant through a stable API
-eyebrow: 11 · THE APPLICATION CONTRACT
-summary: Give the completed AI assistant one stable client and API boundary.
-why: The POC proved the idea and the Orchestrator now chooses between two models. The next step is to expose that growing capability through one predictable interface rather than letting a client know about every internal route.
+title: Put an API in front of the AI system
+eyebrow: 11 · THE APPLICATION PIPELINE
+summary: Introduce the application boundary that lets a frontend call the completed AI system through one stable API.
+why: The AI system is now a coherent capability. A real application still needs a frontend boundary and an API contract so callers do not need to know how the internal AI layers work.
 without: The UI becomes coupled to model choices, and every internal change can force changes in every caller.
-role: The API authenticates the caller, validates the visitor’s question, invokes the AI assistant, and returns one consistent response shape.
+role: The frontend collects the visitor’s question, the API validates and routes the request, and the AI system returns one consistent response shape.
 tradeoff: A stable contract takes planning, but it lets the models and routing logic evolve behind the interface.
 question: What should every caller be able to depend on even when the internal model route changes?
 order: 11
-legend: Solid box = the client and API boundary around the completed AI assistant.
+replaces: [input, assistant, observability, evaluation, evaluation-cases]
+legend: Frontend and API are separate application concerns; the AI system remains behind the API boundary.
 nodes:
-  - { id: client-api, label: Client + API, detail: Public application boundary, kind: merged-container, x: 18, y: 50 }
-  - { id: orchestrator, label: Orchestrator, detail: Routes the question, kind: core, x: 45, y: 50 }
-  - { id: fast-model, label: Fast model, detail: Simple product answer, kind: generation, x: 66, y: 25 }
-  - { id: reasoning-model, label: Complex model, detail: Harder solution question, kind: generation, x: 66, y: 75 }
-  - { id: output, label: Response, detail: One public response shape, kind: boundary, x: 91, y: 50 }
+  - { id: frontend, label: Frontend, detail: Web or mobile visitor experience, kind: boundary, x: 8, y: 50 }
+  - { id: api, label: API layer, detail: Validation + routing + response contract, kind: security, x: 29, y: 50 }
+  - { id: system, label: AI system, detail: Complete AI capability, kind: merged-container, x: 59, y: 50, merge: [orchestrator, fast-model, reasoning-model, prompt, retriever, reranker, sources, pipeline, embeddings, index, vector-store, tools, guard, cache, schema, observability, evaluation] }
+  - { id: output, label: Response, detail: One public response shape, kind: boundary, x: 92, y: 50 }
 connections:
-  - { from: client-api, to: orchestrator, label: validated input }
-  - { from: orchestrator, to: fast-model, label: simple route }
-  - { from: orchestrator, to: reasoning-model, label: complex route }
-  - { from: fast-model, to: output, label: answer }
-  - { from: reasoning-model, to: output, label: answer }
-highlight: [client-api]
+  - { from: frontend, to: api, label: visitor request }
+  - { from: api, to: system, label: validated request }
+  - { from: system, to: output, label: stable response }
+highlight: [api]
 ---
-This is the first boundary that lets the AI capability become part of a real product.
+The frontend and API are different boundaries: one serves people, the other protects and stabilizes the AI capability.

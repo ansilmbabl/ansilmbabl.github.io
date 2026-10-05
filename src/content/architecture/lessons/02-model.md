@@ -4,7 +4,7 @@ eyebrow: 02 · ROUTING AND ORCHESTRATION
 summary: Analyse the question and send it to the model that fits the job.
 why: A single model is a useful POC, but a real assistant receives different kinds of questions. An Orchestrator can classify the request and route it to a fast model, reasoning model, or specialist flow.
 without: Every question uses the same expensive path, even when a simpler or more suitable model would be better.
-role: The Orchestrator reads the request, selects a route, adds basic instructions, and sends the work to the chosen Model.
+role: The Orchestrator is application logic that reads the request, selects a route, adds basic instructions, and sends the work to the chosen Model.
 tradeoff: Routing can improve cost and quality, but it adds another decision that must be tested and observed.
 question: What signals tell us which model or workflow is the right fit for this request?
 order: 2

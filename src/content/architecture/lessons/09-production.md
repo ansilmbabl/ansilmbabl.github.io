@@ -1,10 +1,10 @@
 ---
 title: Scale the application path
 eyebrow: 16 · SCALABILITY
-summary: Add load balancing and capacity controls so the application can serve more users safely.
-why: A single application instance eventually becomes a capacity and failure boundary. Load balancing, rate limits, and replicas let the API distribute traffic without losing control of cost or reliability.
+summary: Add load balancing and capacity controls so the application can serve more users safely, even when a replica fails.
+why: We can see application traffic now, but visibility does not create capacity. More visitors require the request path to distribute work safely.
 without: One instance can become overloaded, a single failure can take down the service, and traffic spikes can make every user experience slow responses.
-role: The API receives traffic through a scalability layer that balances requests, limits abusive bursts, and routes work across healthy application replicas.
+role: The API receives traffic through a scalability layer that balances requests, limits abusive bursts, and routes work across healthy replicas. Shared state and cache keys must still work when requests move between replicas.
 tradeoff: More capacity improves availability, but it adds coordination, state-management, and cost decisions.
 question: What should happen when traffic doubles, one replica fails, or a request becomes too expensive?
 order: 16

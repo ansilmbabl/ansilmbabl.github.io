@@ -1,16 +1,16 @@
 ---
 title: Prepare trusted knowledge
 eyebrow: 04 · THE KNOWLEDGE PIPELINE
-summary: Build the knowledge path that turns company documents into context the model can use.
-why: Retrieval quality begins before the user asks a question. Documents need parsing, chunking, metadata, embeddings, versioning, and access rules.
+summary: Build the offline knowledge path that turns company documents into context the online model can use.
+why: The model needs company knowledge, but that knowledge must be prepared before a visitor asks a question.
 without: The assistant may retrieve stale, incomplete, duplicated, or unauthorized information even when the search component appears to work.
-role: Ingest approved public material, preserve provenance, and make each passage traceable to its source and version; the Retriever then selects relevant context for the model route.
+role: Offline, the pipeline parses documents into smaller chunks, adds metadata, creates embeddings, versions the content, and builds an index. Online, the Retriever uses that prepared index when a visitor asks a question.
 tradeoff: Better preparation costs more engineering time, but it improves retrieval quality and makes updates safer.
 question: How does approved content travel from a document into the model’s context, and when should that evidence stop being trusted?
 order: 4
 removesConnections:
   - { from: prompt, to: model }
-legend: The offline knowledge pipeline feeds the online Retriever, which supplies context to the Model.
+legend: 'Offline lane: Documents → Ingestion → Embeddings → Knowledge index. Online lane: Visitor question → Retriever → Model.'
 nodes:
   - { id: input, label: Visitor question, detail: Retrieval query, kind: boundary, x: 6, y: 25 }
   - { id: prompt, label: Prompt, detail: Instructions + context slot, kind: generation, x: 24, y: 25 }

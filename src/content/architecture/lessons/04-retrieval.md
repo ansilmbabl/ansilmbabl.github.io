@@ -4,7 +4,7 @@ eyebrow: 05 · RETRIEVAL QUALITY
 summary: Improve the basic RAG path so the model receives the most relevant approved evidence.
 why: Finding candidate passages is not the same as finding the best context. Reranking and metadata filters help the system prioritize relevant, current, and applicable evidence.
 without: The model may receive loosely related passages, too much context, or evidence that should not be used for this request.
-role: The Retriever searches the knowledge index, the Reranker orders the candidates, and the Model receives a smaller, more useful context window.
+role: The Retriever finds candidate passages from the prepared index. The Reranker orders those candidates, and the Model receives a smaller, more useful context window.
 tradeoff: Better retrieval quality adds latency and another component to evaluate, but it reduces noise in the model’s context.
 question: Which evidence should be passed to the model, and how can we prove that it was relevant and allowed?
 order: 5

@@ -2,8 +2,8 @@
 title: Put an API in front of the AI system
 eyebrow: 11 · THE APPLICATION PIPELINE
 summary: Introduce the application boundary that lets a frontend call the completed AI system through one stable API.
-why: The AI system is now a coherent capability. A real application still needs a frontend boundary and an API contract so callers do not need to know how the internal AI layers work.
-without: The UI becomes coupled to model choices, and every internal change can force changes in every caller.
+why: The AI system is now a coherent capability. The next question is how a real visitor reaches it without seeing its internal complexity.
+without: The frontend becomes coupled to model choices, and every internal change can force changes in every caller.
 role: The frontend collects the visitor’s question, the API validates and routes the request, and the AI system returns one consistent response shape.
 tradeoff: A stable contract takes planning, but it lets the models and routing logic evolve behind the interface.
 question: What should every caller be able to depend on even when the internal model route changes?

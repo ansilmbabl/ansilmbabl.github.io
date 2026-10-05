@@ -1,10 +1,10 @@
 ---
 title: Observe application access and traffic
 eyebrow: 15 · APPLICATION OBSERVABILITY
-summary: Extend AI tracing into application access, traffic, latency, cost, and errors.
+summary: Extend AI tracing into application access, traffic, latency, cost, and errors across many users.
 why: Stage 09 introduced tracing inside the AI system. The application pipeline also needs to show who is calling it, how traffic behaves, and where latency or errors appear at the API boundary.
 without: A user reports “it failed,” and the team has to guess which part of the system went wrong.
-role: Logs and traces explain one run; metrics for access, traffic, latency, cost, and errors reveal what is changing across many runs.
+role: Stage 09 traces explain one AI run. This layer adds application access, traffic, latency, cost, and error signals so the team can see patterns across many runs.
 tradeoff: More visibility costs storage and requires redaction, retention, and access rules so diagnostic data does not become a new leak.
 question: Can we follow one answer from request to response without recording sensitive content unnecessarily?
 order: 15

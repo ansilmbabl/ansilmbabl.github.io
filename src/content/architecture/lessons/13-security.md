@@ -2,9 +2,9 @@
 title: Add security and IAM
 eyebrow: 13 · TRUST BOUNDARIES
 summary: Protect the application with identity, authorization, privacy, secrets, and audit decisions.
-why: Public AI systems must protect sensitive information, validate callers, limit tools, resist prompt injection, and preserve an audit trail.
+why: The application now stores user and product data. The next risk is not only model behavior, but who can access which data and action.
 without: A helpful response can still leak data, cross a tenant boundary, or perform an action that the user was never authorized to request.
-role: Apply authentication, authorization, input and output checks, secret handling, privacy rules, retention, and human approval around the AI system rather than treating security as one final filter.
+role: IAM answers who may access data or invoke an action. Security also covers secrets, privacy, retention, human approval, and audit around the AI system; Guardrails separately check model behavior.
 tradeoff: Stronger controls add latency and implementation work, but they make the system safe to expose.
 question: Which identity is allowed to see this evidence or invoke this action, and how can we prove that decision later?
 order: 13

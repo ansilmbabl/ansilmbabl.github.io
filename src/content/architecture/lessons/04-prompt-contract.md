@@ -4,7 +4,7 @@ eyebrow: 03 · PROMPTS AND OUTPUTS
 summary: Put a clear prompt before the model route and validate the response before it reaches the visitor.
 why: The routed system now needs a repeatable request shape. A prompt defines the model’s job, while an output schema gives the application something it can validate.
 without: The fast and reasoning routes may return inconsistent responses that the rest of the application cannot safely use.
-role: The Prompt prepares the request, the Model route represents the Orchestrator plus its fast and reasoning models, and the Output schema validates what comes back.
+role: The Prompt is the instruction and context sent to the Model route. The Output schema is the response structure that the application validates before showing it to the visitor.
 tradeoff: More instructions can improve consistency, but they consume tokens and can make prompts harder to maintain.
 question: Which parts of the response must be guaranteed by code instead of merely requested from the model?
 order: 3

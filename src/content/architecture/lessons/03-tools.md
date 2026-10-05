@@ -2,9 +2,9 @@
 title: Give the system a controlled way to act
 eyebrow: 06 · TOOLS AND ACTIONS
 summary: Collapse the knowledge path into RAG, then connect a controlled Tool to the merged Model route.
-why: The assistant can now ground an answer in approved knowledge. The next step is to let the Model complete a useful action without exposing an uncontrolled path into another system.
+why: We now have a grounded answer path. A visitor may still need the assistant to look something up or prepare a support request.
 without: The assistant can explain what should happen, but it cannot safely read from or write to a product system on the visitor’s behalf.
-role: RAG supplies trusted context to the merged Model tile. When the Model decides that an action is needed, it calls a narrow Tool, receives the result, and then returns a structured response.
+role: Keep RAG as the trusted context source, then give the Model one narrow Tool—for example, looking up product availability or preparing a support request—with an explicit contract and controlled result path.
 tradeoff: Tools make the assistant useful beyond question answering, but every tool needs an explicit contract, authorization, timeout, retry policy, and audit trail.
 question: Which action is safe to automate first, and what must the Tool refuse even when the Model asks for it?
 order: 6

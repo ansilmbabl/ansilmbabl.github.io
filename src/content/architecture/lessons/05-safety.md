@@ -2,11 +2,11 @@
 title: Put safety around the acting system
 eyebrow: 07 · SAFETY AND SECURITY
 summary: Merge the Model and Tool into an Agent, then add a Guardrail that checks requests, context, and actions around it.
-why: The assistant can now retrieve knowledge and call a product Tool. Before that capability becomes an Agent, we need a deliberate safety boundary around requests, context, and actions.
-without: The Agent might reveal private information, call a Tool for the wrong user, or present an unsafe action as a normal answer.
-role: The Guardrail receives the request and assembled context, applies policy before the Agent acts, and provides the authorization decision that controls the Agent’s Tool use and response path.
+why: The assistant can now retrieve knowledge and call a product Tool. That usefulness also creates a new public attack surface.
+without: A visitor could try prompt injection, request private information, misuse a Tool, or make an unsafe action look like a normal answer. Guardrails check behavior; IAM later checks whether that user is allowed to access the data or action.
+role: 'A Guardrail checks behavior and policy: request safety, retrieved context, Tool parameters, and response claims. It can allow, block, sanitize, or request review before the Agent acts.'
 tradeoff: Safety checks add a little latency and may sometimes block a valid request, but they make unsafe behavior visible and intentional.
-question: What must never happen—for example, changing production from a chat—and which rule must be enforced before the Agent acts?
+question: Which behavior must never happen, and when do we need a Guardrail decision versus a user-identity and IAM decision?
 order: 7
 replaces: [model, tools, schema]
 legend: The Agent is the main execution path; the Guardrail is a cross-cutting policy layer that authorizes what the Agent may do.

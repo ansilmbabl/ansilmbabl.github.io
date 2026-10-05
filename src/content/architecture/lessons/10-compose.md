@@ -2,8 +2,8 @@
 title: Compose and trace the AI assistant
 eyebrow: 09 · THE AI SYSTEM
 summary: Bring the Agent, RAG, and runtime controls together, then make every run traceable.
-why: 'The assistant is now more than a model: orchestration, prompts, retrieval, tools, guardrails, and optimization must cooperate as one understandable system.'
-without: Each component can work in isolation while the end-to-end behavior remains unpredictable and difficult to explain.
+why: 'We now have the core AI system: routing, contracts, RAG, Tools, Guardrails, and Cache.'
+without: Each component can work in isolation while the end-to-end behavior remains difficult to explain when a visitor reports a bad or slow answer.
 role: Define one internal AI system boundary that owns the Agent, the complete RAG path, safety checks, caching, and response generation. Add tracing so each model, retrieval, and Tool step can be followed.
 tradeoff: A clear boundary improves ownership and testing, but it requires explicit contracts between components.
 question: Can we explain one request end to end, including what the Model, RAG path, and Tool did along the way?

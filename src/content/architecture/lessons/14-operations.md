@@ -2,9 +2,9 @@
 title: Close the feedback loop
 eyebrow: 17 · CONTINUOUS FEEDBACK
 summary: Turn real user behavior into feedback, evaluation cases, experiments, and controlled updates.
-why: A deployed application improves only when real usage becomes evidence. Feedback should become repeatable evaluation cases and controlled experiments instead of isolated anecdotes.
-without: Incidents become guesswork, alerts arrive too late, and every failure requires rediscovering how the system works.
-role: The feedback loop collects user signals, adds evaluation cases, compares experiments, and sends only tested changes back to the application.
+why: The application can handle more traffic, but usage is not only load. Real visitors reveal new questions, failures, and opportunities to improve the product.
+without: Changes are driven by isolated anecdotes, while useful feedback never becomes a repeatable improvement process.
+role: The feedback loop collects user signals, turns them into evaluation cases, compares experiments, and sends only tested changes back to the application.
 tradeoff: Operational discipline takes time, but it reduces recovery time and makes support less dependent on one person.
 question: Which user signal should become a new evaluation case, and what evidence is enough to ship an improvement?
 order: 17

@@ -4,7 +4,7 @@ eyebrow: 01 · DIRECT MODEL POC
 summary: Send a visitor’s product question directly to one Model and return its response.
 why: "The fastest way to test the idea is to build the smallest possible interaction: user question in, model response out."
 without: We do not know whether the assistant can provide any useful value for the business problem.
-role: The POC sends the question directly to a Model with a basic instruction and displays the generated response to the visitor.
+role: The POC sends the question directly to a Model—a language model that generates an answer—with a basic instruction and displays the response.
 tradeoff: This is quick to build, but the Model has no approved product knowledge, no support tools, and no reliable control over its answer.
 question: Does this simple interaction solve enough of the user’s problem to justify building the next layer?
 order: 1

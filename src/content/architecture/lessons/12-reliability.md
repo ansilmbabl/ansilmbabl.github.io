@@ -2,9 +2,9 @@
 title: Make slow work reliable
 eyebrow: 14 · RELIABILITY AND ASYNC WORK
 summary: Add an asynchronous reliability layer for queues, workers, retries, and fallbacks.
-why: Model providers, document processing, and external tools can be slow or temporarily unavailable. A production service must decide how to wait, retry, defer, or recover.
+why: The application is protected and can store its state, but some work will still be slow or temporarily unavailable.
 without: One slow dependency can make the whole request time out, duplicate work can happen, and transient failures become user-visible outages.
-role: A queue holds ingestion, long-running actions, or handoffs safely; a worker processes them, and retry or fallback rules handle temporary failures behind one reliability boundary.
+role: A queue holds document ingestion, long-running actions, or support handoffs; a worker processes them, and retry or fallback rules handle temporary failures. A normal short chatbot answer can remain synchronous.
 tradeoff: Async processing improves resilience, but users may wait longer and the team must operate more moving parts.
 question: Which failures should we retry, which should fall back, and which should reach a human?
 order: 14
@@ -14,7 +14,7 @@ nodes:
   - { id: frontend, label: Frontend, detail: Web or mobile visitor experience, kind: boundary, x: 8, y: 50 }
   - { id: api, label: API layer, detail: Stable application contract, kind: security, x: 25, y: 50 }
   - { id: system, label: AI system, detail: Agent + RAG + controls, kind: merged-container, x: 50, y: 50, merge: [orchestrator, fast-model, reasoning-model, prompt, retriever, reranker, sources, pipeline, embeddings, index, vector-store, tools, guard, cache, schema, observability, evaluation] }
-  - { id: reliability, label: Reliability layer, detail: Queue + worker + recovery, kind: merged-container, x: 64, y: 80, merge: [api, queue, worker, fallback, result] }
+  - { id: reliability, label: Reliability layer, detail: Async queue + worker + recovery, kind: merged-container, x: 64, y: 80, merge: [api, queue, worker, fallback, result] }
   - { id: output, label: Response, detail: Result or safe handoff, kind: boundary, x: 92, y: 50 }
 connections:
   - { from: frontend, to: api, label: visitor request }

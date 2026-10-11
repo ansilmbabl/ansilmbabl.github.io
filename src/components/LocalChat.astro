@@ -1,0 +1,125 @@
+---
+interface CorpusEntry { id: string; title: string; kind: string; content: string; }
+interface Props { corpus: CorpusEntry[]; }
+const { corpus } = Astro.props;
+---
+
+<section class="local-chat" aria-label="Browser-local AI chatbot">
+  <div class="chat-workspace">
+    <header class="chat-topbar">
+      <div class="chat-brand"><span class="brand-mark">✦</span><div><strong>Local AI</strong><small>Ansil’s portfolio assistant</small></div></div>
+      <div class="runtime-pills" aria-label="Local model status">
+        <span class="runtime-pill"><i data-ready-dot></i><b data-model-state>Not loaded</b></span>
+        <span class="runtime-pill" data-backend>Checking browser</span>
+        <span class="runtime-pill local-pill">Local only</span>
+      </div>
+      <button type="button" class="reset-button" data-reset>New chat</button>
+    </header>
+
+    <main class="chat-main">
+      <div class="chat-messages" data-messages aria-live="polite">
+        <section class="welcome-state" data-welcome>
+          <div class="welcome-icon">✦</div>
+          <h1>How can I help?</h1>
+          <p>Ask about Ansil’s work, projects, or approach to applied AI. The response is generated locally in your browser.</p>
+          <div class="model-start" data-model-start>
+            <div><strong>Run a local chat model</strong><span>First visit downloads about 500 MB and caches it in your browser.</span></div>
+            <button type="button" class="start-button" data-start>Start local chat</button>
+          </div>
+          <div class="download-panel" data-progress-wrap hidden>
+            <div class="download-heading"><strong data-download-title>Downloading local model</strong><b data-progress-value>0%</b></div>
+            <div class="download-track"><i data-progress-bar></i></div>
+            <small data-download-note>Keep this tab open while the model is prepared.</small>
+          </div>
+          <div class="prompt-grid" aria-label="Suggested questions">
+            <button type="button" data-prompt="Who is Ansil?" disabled><span>About Ansil</span><b>Who is Ansil?</b></button>
+            <button type="button" data-prompt="What kind of AI work has Ansil done?" disabled><span>Experience</span><b>What kind of AI work has Ansil done?</b></button>
+            <button type="button" data-prompt="Explain one of Ansil’s projects." disabled><span>Projects</span><b>Explain one of Ansil’s projects.</b></button>
+            <button type="button" data-prompt="How does this chatbot work?" disabled><span>This demo</span><b>How does this chatbot work?</b></button>
+          </div>
+        </section>
+      </div>
+
+      <div class="composer-area">
+        <form class="chat-form" data-chat-form>
+          <label class="sr-only" for="local-chat-input">Message the local assistant</label>
+          <textarea id="local-chat-input" data-input rows="1" autocomplete="off" placeholder="Start the local model to begin…" disabled></textarea>
+          <button class="send-button" type="submit" data-send aria-label="Send message" disabled>↑</button>
+        </form>
+        <div class="composer-meta"><span data-status>Preparing the local model…</span><span data-detail>WebGPU / WASM · private by design</span></div>
+      </div>
+    </main>
+
+    <div class="generation-meta" data-generation-meta hidden><span data-retrieved>0 notes</span><span data-metrics>—</span></div>
+  </div>
+</section>
+
+<style>
+  .local-chat{width:100%;min-height:min(760px,calc(100vh - 150px));padding:12px 0 32px}.chat-workspace{display:flex;flex-direction:column;min-height:min(720px,calc(100vh - 180px));max-width:920px;margin:0 auto;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.42);box-shadow:0 18px 55px rgba(32,37,34,.07);overflow:hidden}.chat-topbar{display:flex;align-items:center;gap:20px;padding:15px 20px;border-bottom:1px solid rgba(217,220,210,.8);background:rgba(248,247,242,.86);backdrop-filter:blur(12px)}.chat-brand{display:flex;align-items:center;gap:10px;min-width:190px}.brand-mark{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:var(--accent);color:var(--paper);font-size:15px}.chat-brand strong,.chat-brand small{display:block}.chat-brand strong{font-size:13px;font-weight:700}.chat-brand small{margin-top:1px;color:var(--muted);font-size:10px}.runtime-pills{display:flex;align-items:center;gap:7px;flex:1}.runtime-pill{display:flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:10px;white-space:nowrap}.runtime-pill b{color:var(--ink);font-weight:500}.runtime-pill i{width:6px;height:6px;border-radius:50%;background:#c58745}.runtime-pill i.ready{background:var(--accent)}.local-pill{border-color:#b5d2c4;color:var(--accent);background:#eef6f0}.reset-button{padding:7px 10px;border:0;border-radius:7px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}.reset-button:hover{background:var(--soft);color:var(--ink)}.chat-main{display:flex;flex:1;flex-direction:column;min-height:0}.chat-messages{flex:1;overflow:auto;padding:42px 64px 20px}.welcome-state{display:flex;flex-direction:column;align-items:center;max-width:620px;margin:auto;text-align:center}.welcome-icon{display:grid;place-items:center;width:46px;height:46px;margin-bottom:17px;border-radius:15px;background:#dfece4;color:var(--accent);font-size:22px}.welcome-state h1{font-size:clamp(31px,5vw,46px);letter-spacing:-.045em}.welcome-state>p{max-width:490px;margin:12px auto 30px;color:#687068;font-size:15px;line-height:1.6}.model-start{display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;margin:0 0 18px;padding:13px 15px;border:1px solid #b9d6c5;border-radius:12px;background:#eef6f0;text-align:left}.model-start strong,.model-start span{display:block}.model-start strong{color:var(--accent);font-size:12px}.model-start span{margin-top:3px;color:#5d7165;font-size:10px}.start-button{padding:9px 12px;border:0;border-radius:8px;background:var(--accent);color:var(--paper);cursor:pointer;font-size:11px;white-space:nowrap}.start-button:disabled{opacity:.55;cursor:wait}.download-panel{width:100%;margin:-7px 0 18px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:left}.download-heading{display:flex;justify-content:space-between;gap:15px;color:var(--accent);font-size:11px}.download-heading b{font-weight:500}.download-track{height:7px;margin:9px 0 6px;overflow:hidden;border-radius:99px;background:#e4e9e2}.download-track i{display:block;width:0;height:100%;border-radius:99px;background:var(--accent);transition:width .25s}.download-panel small{color:var(--muted);font-size:10px}.prompt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;text-align:left}.prompt-grid button{min-height:78px;padding:13px 15px;border:1px solid var(--line);border-radius:11px;background:rgba(248,247,242,.72);color:var(--ink);cursor:pointer;text-align:left;transition:border-color .2s,background .2s,transform .2s}.prompt-grid button:hover:not(:disabled){border-color:#9ec5b2;background:#f2f8f3;transform:translateY(-1px)}.prompt-grid button:disabled{cursor:not-allowed;opacity:.48}.prompt-grid span,.prompt-grid b{display:block}.prompt-grid span{margin-bottom:7px;color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.prompt-grid b{font-size:12px;font-weight:500;line-height:1.35}.chat-message{display:flex;margin:0 auto 26px;max-width:730px}.chat-message.user{justify-content:flex-end}.chat-message p{max-width:70%;margin:0;padding:12px 16px;border-radius:17px 17px 4px 17px;background:var(--accent);color:var(--paper);font-size:14px;line-height:1.55;white-space:pre-wrap}.chat-message.assistant p{max-width:85%;padding:5px 0;border-radius:0;background:transparent;color:var(--ink);font-size:15px;line-height:1.7}.composer-area{padding:12px 64px 18px;background:linear-gradient(transparent,rgba(248,247,242,.95) 18%)}.chat-form{position:relative;max-width:730px;margin:0 auto}.chat-form textarea{display:block;width:100%;min-height:51px;max-height:150px;padding:15px 54px 14px 17px;border:1px solid #cfd4ca;border-radius:16px;outline:none;background:#fff;color:var(--ink);box-shadow:0 4px 16px rgba(32,37,34,.06);font:14px Arial,sans-serif;line-height:1.45;resize:none}.chat-form textarea:disabled{cursor:not-allowed;opacity:.68}.chat-form textarea:focus{border-color:#8fbba5;box-shadow:0 0 0 3px rgba(23,107,88,.1)}.send-button{position:absolute;right:9px;bottom:9px;width:32px;height:32px;border:0;border-radius:10px;background:var(--accent);color:var(--paper);cursor:pointer;font-size:20px;line-height:1}.send-button:disabled{opacity:.45;cursor:wait}.composer-meta{display:flex;justify-content:space-between;gap:15px;max-width:730px;margin:8px auto 0;color:var(--muted);font-size:10px}.generation-meta{display:flex;justify-content:center;gap:15px;padding:7px;color:var(--muted);font-size:10px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media(max-width:700px){.local-chat{min-height:calc(100vh - 112px);padding:0 0 18px}.chat-workspace{min-height:calc(100vh - 130px);border-right:0;border-left:0;border-radius:0}.chat-topbar{padding:13px 16px}.chat-brand{min-width:0}.chat-brand small{display:none}.runtime-pills{justify-content:flex-end;gap:4px}.runtime-pill{padding:5px 7px}.runtime-pill:not(:first-child){font-size:0}.local-pill{display:none}.reset-button{font-size:0}.reset-button::after{content:'＋';font-size:18px}.chat-messages{padding:32px 18px 12px}.welcome-state>p{font-size:14px}.prompt-grid{grid-template-columns:1fr}.prompt-grid button{min-height:64px}.chat-message p{max-width:88%}.chat-message.assistant p{max-width:96%}.composer-area{padding:10px 16px 14px}.composer-meta{font-size:9px}.composer-meta span:last-child{display:none}}
+</style>
+
+<script type="application/json" id="local-ai-corpus" set:html={JSON.stringify(corpus)}></script>
+
+<script>
+  import { env, pipeline, TextStreamer } from '@huggingface/transformers';
+
+  const corpus = JSON.parse(document.querySelector('#local-ai-corpus')?.textContent ?? '[]');
+  const root = document.querySelector('.local-chat');
+  if (root) {
+    const messages = root.querySelector('[data-messages]');
+    const welcome = root.querySelector('[data-welcome]');
+    const form = root.querySelector('[data-chat-form]');
+    const input = root.querySelector('[data-input]');
+    const send = root.querySelector('[data-send]');
+    const status = root.querySelector('[data-status]');
+    const modelState = root.querySelector('[data-model-state]');
+    const readyDot = root.querySelector('[data-ready-dot]');
+    const backendLabel = root.querySelector('[data-backend]');
+    const detail = root.querySelector('[data-detail]');
+    const retrieved = root.querySelector('[data-retrieved]');
+    const metrics = root.querySelector('[data-metrics]');
+    const generationMeta = root.querySelector('[data-generation-meta]');
+    const progressWrap = root.querySelector('[data-progress-wrap]');
+    const progressBar = root.querySelector('[data-progress-bar]');
+    const progressValue = root.querySelector('[data-progress-value]');
+    const downloadTitle = root.querySelector('[data-download-title]');
+    const downloadNote = root.querySelector('[data-download-note]');
+    const startButton = root.querySelector('[data-start]');
+    const promptButtons = root.querySelectorAll('[data-prompt]');
+    const history = [];
+    let extractorPromise;
+    let generatorPromise;
+    let chunks;
+    let isBusy = false;
+    let modelReady = false;
+    let fallbackMode = false;
+    const MODEL = 'onnx-community/Qwen2.5-0.5B-Instruct-ONNX';
+    const EMBEDDING_MODEL = 'Xenova/all-MiniLM-L6-v2';
+    const stopwords = new Set(['the','and','for','that','this','with','from','when','what','where','which','into','does','your','have','will','are','was','were','been','then','than','only','not','but','can','how','about','tell','give','one']);
+    const words = (value) => value.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((word) => word.length > 2 && !stopwords.has(word));
+    const makeChunks = (entries) => entries.flatMap((entry) => { const tokens = entry.content.trim().split(/\s+/).filter(Boolean); const size = 110; const overlap = 18; const result = []; for (let start = 0; start < tokens.length; start += size - overlap) { const text = tokens.slice(start, start + size).join(' '); if (text) result.push({ id: entry.id, title: entry.title, kind: entry.kind, text }); if (start + size >= tokens.length) break; } return result; });
+    chunks = makeChunks(corpus);
+    const setStatus = (value) => { if (status) status.textContent = value; };
+    const setProgress = (value) => { if (!progressWrap) return; progressWrap.hidden = false; const percent = Math.max(0, Math.min(100, Math.round(value ?? 0))); if (progressValue) progressValue.textContent = `${percent}%`; if (progressBar) progressBar.style.width = `${percent}%`; };
+    const scrollMessages = () => messages?.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
+    const addMessage = (role, text) => { welcome?.setAttribute('hidden', ''); const article = document.createElement('div'); article.className = `chat-message ${role}`; const copy = document.createElement('p'); copy.textContent = text; article.append(copy); messages?.append(article); scrollMessages(); return copy; };
+    const cosine = (left, right) => left.reduce((sum, value, index) => sum + value * right[index], 0);
+    const keywordRetrieve = (question) => { const query = [...new Set(words(question))]; return chunks.map((chunk) => { const terms = new Set(words(chunk.text)); const matches = query.filter((term) => terms.has(term)); return { ...chunk, score: query.length ? matches.length / query.length : 0 }; }).sort((a, b) => b.score - a.score).slice(0, 4); };
+    const retrieve = async (question) => { try { if (!extractorPromise) extractorPromise = pipeline('feature-extraction', EMBEDDING_MODEL, { progress_callback: (event) => { if (event.status === 'progress') setProgress(event.progress); } }); const extractor = await extractorPromise; const query = Array.from((await extractor(question, { pooling: 'mean', normalize: true })).data); const ranked = await Promise.all(chunks.map(async (chunk) => ({ ...chunk, score: cosine(query, Array.from((await extractor(chunk.text, { pooling: 'mean', normalize: true })).data)) }))); return ranked.sort((a, b) => b.score - a.score).slice(0, 4); } catch (error) { console.warn('Semantic retrieval unavailable; using keyword fallback.', error); return keywordRetrieve(question); } };
+    const getGenerator = async () => { if (!generatorPromise) { const device = 'gpu' in navigator ? 'webgpu' : 'wasm'; if (backendLabel) backendLabel.textContent = device === 'webgpu' ? 'WebGPU' : 'WASM'; if (detail) detail.textContent = `${device === 'webgpu' ? 'WebGPU' : 'WASM'} · private by design`; env.backends.onnx.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 1); generatorPromise = pipeline('text-generation', MODEL, { device, dtype: 'q4', progress_callback: (event) => { if (event.status === 'progress') setProgress(event.progress); } }); } return generatorPromise; };
+    const buildPrompt = (question, evidence) => { const context = evidence.map((item, index) => `[SOURCE ${index + 1} · ${item.title}]\n${item.text}`).join('\n\n'); const previous = history.slice(-4).map((item) => `${item.role === 'user' ? 'Visitor' : 'Assistant'}: ${item.text}`).join('\n'); return `<|im_start|>system\nYou are a concise portfolio assistant for Ansil M B. Answer using the supplied public site context. Never invent personal facts, employers, projects, metrics, or experiences. If the context does not support a claim about Ansil, say: "I don't have enough information about Ansil to answer that." You may explain general AI concepts, and should say when an answer is general rather than profile-specific.\n\nPUBLIC SITE CONTEXT:\n${context}<|im_end|>\n${previous ? `${previous}\n` : ''}<|im_start|>user\n${question}<|im_end|>\n<|im_start|>assistant\n`; };
+    const resizeInput = () => { if (!input) return; input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; };
+    const fallbackAnswer = (question, evidence) => { const lower = question.toLowerCase(); if (lower.includes('who is ansil') || lower.includes('about ansil')) return 'Ansil M B builds applied AI systems for real business problems and explores the research underneath them. His work spans agentic systems, retrieval, computer vision, evaluation, and local AI experiments.'; if (evidence[0]) return `Here is the closest public note I found about Ansil’s work:\n\n${evidence[0].text.slice(0, 420)}${evidence[0].text.length > 420 ? '…' : ''}`; return "I don't have enough information about Ansil to answer that."; };
+    const answer = async (question) => { if (isBusy || !question.trim()) return; if (!modelReady && !fallbackMode) { setStatus('Click Start local chat to begin'); return; } isBusy = true; if (send) send.disabled = true; addMessage('user', question.trim()); if (input) { input.value = ''; resizeInput(); } setStatus('Finding relevant notes…'); const evidence = fallbackMode ? keywordRetrieve(question) : await retrieve(question); if (retrieved) retrieved.textContent = `${evidence.length} notes`; if (generationMeta) generationMeta.hidden = false; const started = performance.now(); const copy = addMessage('assistant', 'Thinking…'); try { if (fallbackMode) { copy.textContent = fallbackAnswer(question, evidence); setStatus('Demo response · local model unavailable'); } else { const generator = await getGenerator(); const prompt = buildPrompt(question, evidence); let generated = ''; const streamer = new TextStreamer(generator.tokenizer, { skip_prompt: true, callback_function: (token) => { generated += token; copy.textContent = generated; scrollMessages(); } }); setStatus('Generating locally…'); const result = await generator(prompt, { max_new_tokens: 180, do_sample: true, temperature: 0.35, top_p: 0.9, return_full_text: false, streamer }); if (!generated) generated = String(result?.[0]?.generated_text ?? '').trim(); copy.textContent = generated || "I don't have enough information about Ansil to answer that."; setStatus('Ready'); } history.push({ role: 'user', text: question }, { role: 'assistant', text: copy.textContent }); if (metrics) metrics.textContent = `${((performance.now() - started) / 1000).toFixed(1)}s`; } catch (error) { console.error(error); fallbackMode = true; if (modelState) modelState.textContent = 'Demo fallback'; if (readyDot) readyDot.classList.add('ready'); copy.textContent = fallbackAnswer(question, evidence); setStatus('Demo response · local model unavailable'); } finally { isBusy = false; if (send) send.disabled = false; } };
+    form?.addEventListener('submit', (event) => { event.preventDefault(); answer(input?.value ?? ''); });
+    input?.addEventListener('input', resizeInput);
+    input?.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form?.requestSubmit(); } });
+    const enableChat = () => { input?.removeAttribute('disabled'); if (send) send.disabled = false; promptButtons.forEach((button) => button.removeAttribute('disabled')); };
+    const startLocalChat = async () => { if (modelReady || isBusy) return; isBusy = true; if (startButton) { startButton.disabled = true; startButton.textContent = 'Loading…'; } if (modelState) modelState.textContent = 'Loading model'; setStatus('Downloading the local model…'); if (downloadTitle) downloadTitle.textContent = 'Downloading local model'; if (downloadNote) downloadNote.textContent = 'This can take a few minutes on the first visit. It will be cached afterward.'; if (progressWrap) progressWrap.hidden = false; try { await getGenerator(); modelReady = true; if (modelState) modelState.textContent = 'Model ready'; readyDot?.classList.add('ready'); if (progressValue) progressValue.textContent = '100%'; if (progressBar) progressBar.style.width = '100%'; if (downloadTitle) downloadTitle.textContent = 'Local model ready'; if (downloadNote) downloadNote.textContent = 'Cached in this browser for your next visit.'; if (startButton) startButton.hidden = true; enableChat(); setStatus('Ready'); } catch (error) { console.error(error); fallbackMode = true; if (modelState) modelState.textContent = 'Demo fallback'; if (downloadTitle) downloadTitle.textContent = 'Model unavailable'; if (downloadNote) downloadNote.textContent = 'The portfolio demo is still available with local fallback responses.'; if (startButton) { startButton.disabled = false; startButton.textContent = 'Retry local model'; } enableChat(); setStatus('Fallback ready · local model unavailable'); } finally { isBusy = false; } };
+    startButton?.addEventListener('click', startLocalChat);
+    root.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => answer(button.dataset.prompt ?? '')));
+    root.querySelector('[data-reset]')?.addEventListener('click', () => { history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Ready for a new conversation'); input?.focus(); });
+    if ('gpu' in navigator) { if (backendLabel) backendLabel.textContent = 'WebGPU available'; } else if (backendLabel) backendLabel.textContent = 'WASM fallback';
+  }
+</script>

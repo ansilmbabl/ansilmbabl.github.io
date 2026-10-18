@@ -4,20 +4,8 @@ import RagExplorer from '../../components/RagExplorer.astro';
 import CatchupViewer from '../../components/CatchupViewer.astro';
 import ArchitectureBuilder from '../../components/ArchitectureBuilder.astro';
 import LocalChat from '../../components/LocalChat.astro';
+import localChatCorpus from '../../data/localChatCorpus';
 import { getCollection, render } from 'astro:content';
-
-const [profileEntries, projectEntries, workEntries] = await Promise.all([
-  getCollection('profile'),
-  getCollection('projects'),
-  getCollection('work'),
-]);
-
-const profileCorpus = [...profileEntries, ...projectEntries, ...workEntries].map((entry) => ({
-  id: entry.id,
-  title: entry.data.title ?? entry.data.name ?? entry.id,
-  kind: entry.data.type ?? entry.data.category ?? 'Profile note',
-  content: [entry.data.description, entry.body].filter(Boolean).join('\n\n'),
-}));
 
 export async function getStaticPaths() {
   const experiments = await getCollection('playground');
@@ -33,7 +21,7 @@ const demoRegistry = {
   'local-ai-chat': LocalChat,
 };
 const Demo = item.data.demo ? demoRegistry[item.data.demo] : undefined;
-const demoProps = item.data.demo === 'local-ai-chat' ? { corpus: profileCorpus } : {};
+const demoProps = item.data.demo === 'local-ai-chat' ? { corpus: localChatCorpus } : {};
 ---
 
 <BaseLayout title={item.data.title} description={item.data.description}>

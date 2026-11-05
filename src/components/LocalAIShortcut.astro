@@ -1,0 +1,28 @@
+---
+const pathname = Astro.url.pathname;
+const showShortcut = !pathname.startsWith('/playground/local-ai-chat');
+const prompt = pathname.startsWith('/projects/')
+  ? 'Explain this project in simple terms.'
+  : pathname.startsWith('/work/')
+    ? 'What AI problem did this work solve?'
+    : pathname.startsWith('/about')
+      ? 'Who is Ansil?'
+      : pathname.startsWith('/playground/')
+        ? 'How does this local AI experiment work?'
+        : '';
+const href = `/playground/local-ai-chat/${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ''}`;
+---
+
+{showShortcut && <a class="local-ai-shortcut" href={href} aria-label="Open Ansil’s local AI chatbot">
+  <span class="shortcut-orb" aria-hidden="true">✦</span>
+  <span class="shortcut-copy"><strong>Ask local AI</strong><small>Runs in your browser</small></span>
+</a>}
+
+<style is="global">
+  .local-ai-shortcut { position:fixed; right:24px; bottom:24px; z-index:20; display:flex; align-items:center; gap:10px; padding:8px 13px 8px 8px; border:1px solid #b7d3c2; border-radius:999px; background:rgba(248,247,242,.94); color:var(--ink); box-shadow:0 10px 28px rgba(32,37,34,.12); backdrop-filter:blur(12px); transition:transform .2s,box-shadow .2s,border-color .2s; }
+  .local-ai-shortcut:hover { color:var(--ink); border-color:#8ebca4; box-shadow:0 14px 32px rgba(32,37,34,.17); transform:translateY(-2px); }
+  .shortcut-orb { display:grid; place-items:center; width:32px; height:32px; border-radius:11px; background:var(--accent); color:var(--paper); font-size:16px; }
+  .shortcut-copy strong,.shortcut-copy small { display:block; }.shortcut-copy strong { font-size:12px; line-height:1.2; }.shortcut-copy small { margin-top:2px; color:var(--muted); font-size:10px; line-height:1.2; }
+  @media (prefers-reduced-motion:no-preference) { .shortcut-orb { animation:local-ai-breathe 3.5s ease-in-out infinite; } @keyframes local-ai-breathe { 50% { box-shadow:0 0 0 5px rgba(23,107,88,.08); } } }
+  @media (max-width:700px) { .local-ai-shortcut { right:15px; bottom:15px; padding:8px; }.shortcut-copy small { display:none; }.shortcut-copy strong { font-size:11px; } }
+</style>

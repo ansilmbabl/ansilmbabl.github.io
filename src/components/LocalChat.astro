@@ -181,5 +181,7 @@ import localChatModels from '../data/localChatModels';
     root.querySelector('[data-reset]')?.addEventListener('click', () => { history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Ready for a new conversation'); input?.focus(); });
     if ('gpu' in navigator) { if (backendLabel) backendLabel.textContent = 'WebGPU available'; } else if (backendLabel) backendLabel.textContent = 'WASM fallback';
     updateModelDetails();
+    const contextualPrompt = new URLSearchParams(location.search).get('prompt');
+    if (contextualPrompt && input) { input.value = contextualPrompt; resizeInput(); setStatus('Start local chat to send this question'); }
   }
 </script>

@@ -1,6 +1,7 @@
 ---
 interface Props { title: string; description?: string; }
 const { title, description = 'Ansil M B — Data Scientist and AI/ML Engineer.' } = Astro.props;
+import LocalAIShortcut from '../components/LocalAIShortcut.astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -16,6 +17,7 @@ const { title, description = 'Ansil M B — Data Scientist and AI/ML Engineer.' 
     </header>
     <main><slot /></main>
     <footer class="site-footer"><span>© 2026 Ansil M B</span><span>Bengaluru, India</span></footer>
+    <LocalAIShortcut />
   </body>
 </html>
 

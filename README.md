@@ -9,6 +9,8 @@ The site is a static Astro website deployed to GitHub Pages. It presents selecte
 - Add a public article under `src/content/writing/` as Markdown.
 - Add a case study under `src/content/work/` as Markdown.
 - Add or update a role under `src/content/career/` as Markdown.
+- Add or update an education entry under `src/content/education/` as Markdown.
+- Set `draft: true` on a career or education entry to keep it in the repository without displaying it publicly.
 - Set `draft: true` while writing; drafts are excluded from the site build.
 - Run `npm run dev` to preview locally.
 - Push to `master` to trigger `.github/workflows/deploy.yml`.

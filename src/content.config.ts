@@ -26,4 +26,16 @@ const work = defineCollection({
   }),
 });
 
-export const collections = { writing, work };
+const career = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/career' }),
+  schema: z.object({
+    period: z.string(),
+    title: z.string(),
+    organization: z.string(),
+    location: z.string().optional(),
+    order: z.number(),
+    current: z.boolean().default(false),
+  }),
+});
+
+export const collections = { writing, work, career };

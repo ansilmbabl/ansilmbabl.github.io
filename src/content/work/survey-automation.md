@@ -2,6 +2,7 @@
 title: "Survey automation and validation"
 description: "Using fine-tuned language models and reviewer agents to turn complex survey requirements into usable outputs."
 category: "Generative AI"
+organization: "Aptagrim Consulting Ltd"
 order: 3
 confidential: false
 featured: true
@@ -12,7 +13,7 @@ technologies: [LLMs, RAG, agent workflows, DeepEval]
 
 Survey programming required converting long, unstructured requirements into XML and spreadsheet outputs. Manual programming took about a day and was difficult to validate consistently.
 
-## The approach
+## My contribution
 
 I fine-tuned open- and closed-source models and built reviewer and inter-agent workflows to validate results and flag issues before delivery. Prompt comparisons, hallucination checks, latency tracking, and token/cost tracking supported iteration.
 

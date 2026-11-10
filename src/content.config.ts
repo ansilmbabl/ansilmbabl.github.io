@@ -19,6 +19,7 @@ const work = defineCollection({
     title: z.string(),
     description: z.string(),
     category: z.string(),
+    organization: z.string(),
     order: z.number(),
     confidential: z.boolean().default(false),
     featured: z.boolean().default(false),

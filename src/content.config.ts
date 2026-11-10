@@ -52,4 +52,56 @@ const education = defineCollection({
   }),
 });
 
-export const collections = { writing, work, career, education };
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    status: z.enum(['active', 'exploring', 'paused', 'shipped']).default('exploring'),
+    type: z.string().default('Personal project'),
+    started: z.string().optional(),
+    order: z.number(),
+    featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
+    technologies: z.array(z.string()).default([]),
+  }),
+});
+
+const playground = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/playground' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    kind: z.string(),
+    status: z.enum(['planned', 'building', 'live']).default('planned'),
+    href: z.string().optional(),
+    order: z.number(),
+    featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const catchups = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/catchups' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    published: z.coerce.date(),
+    topics: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const profile = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/profile' }),
+  schema: z.object({
+    name: z.string(),
+    headline: z.string(),
+    location: z.string(),
+    availability: z.string(),
+    interests: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { writing, work, career, education, projects, playground, catchups, profile };

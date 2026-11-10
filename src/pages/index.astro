@@ -2,34 +2,47 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('work')).filter((entry) => entry.data.featured).sort((a, b) => a.data.order - b.data.order);
-const posts = (await getCollection('writing')).filter((entry) => !entry.data.draft).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf()).slice(0, 2);
+const profile = (await getCollection('profile')).find((entry) => !entry.data.draft);
+const projects = (await getCollection('work')).filter((entry) => entry.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 2);
+const personalProjects = (await getCollection('projects')).filter((entry) => entry.data.featured && !entry.data.draft).sort((a, b) => a.data.order - b.data.order).slice(0, 2);
+const writing = (await getCollection('writing')).filter((entry) => !entry.data.draft).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf()).slice(0, 2);
+const catchup = (await getCollection('catchups')).filter((entry) => !entry.data.draft).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf())[0];
+const playground = (await getCollection('playground')).filter((entry) => entry.data.featured && !entry.data.draft).sort((a, b) => a.data.order - b.data.order).slice(0, 2);
 ---
-<BaseLayout title="Ansil M B" description="Ansil M B is an AI/ML Engineer building production AI systems across GenAI, computer vision, and intelligent automation.">
+<BaseLayout title={profile?.data.name ?? 'Ansil M B'} description={profile?.data.headline}>
   <div class="page-wrap home">
-    <p class="eyebrow">AI/ML Engineer · Bengaluru, India</p>
-    <h1>I build AI systems that survive contact with <em>production.</em></h1>
-    <p class="intro">I’m Ansil. I work across Generative AI, computer vision, and intelligent automation—connecting models to real workflows, real users, and real constraints.</p>
-    <a class="button" href="/work/">See how I work ↓</a>
+    <p class="eyebrow">Personal AI field lab · {profile?.data.location ?? 'Bengaluru, India'}</p>
+    <h1>{profile?.data.headline ?? 'I like to dig deeper into AI.'}</h1>
+    <p class="intro">I build applied AI systems for real business problems, explore the research underneath them, and document what I learn along the way.</p>
+    <div class="hero-links"><a class="button" href="/work/">Explore my work →</a><a href="/notes/">Read the notes</a><a href="/playground/">Enter the playground</a></div>
+
+    <div class="current-signal"><div><p class="eyebrow">Current signal</p><h2>Building a more <em>useful</em> relationship with AI.</h2></div><p>{profile?.data.availability ?? 'Exploring applied AI, agents, and research.'}</p></div>
+
     <div class="rule"></div>
-    <p class="eyebrow">A few signals</p>
-    <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-top:25px">
-      <div><h2>3+</h2><p>years building AI systems</p></div>
-      <div><h2>5</h2><p>agents in one production system</p></div>
-      <div><h2>14</h2><p>tools exposed through MCP</p></div>
-      <div><h2>500</h2><p>internal users supported</p></div>
+    <div class="section-heading"><div><p class="eyebrow">Explore the field lab</p><h2>Different ways to <em>look closer.</em></h2></div></div>
+    <div class="field-map"><a href="/work/"><span>01</span><strong>Professional work</strong><p>Systems I’ve built with teams and companies.</p><b>Go to work →</b></a><a href="/projects/"><span>02</span><strong>Personal projects</strong><p>Longer-running questions I’m exploring for myself.</p><b>Go to projects →</b></a><a href="/notes/"><span>03</span><strong>Notes and signals</strong><p>Technical writing, research trails, and AI catchups.</p><b>Go to notes →</b></a><a href="/playground/"><span>04</span><strong>Playground</strong><p>Small demos and ideas you can experience.</p><b>Enter playground →</b></a></div>
+
+    <div class="rule"></div>
+    <div class="section-heading"><div><p class="eyebrow">Latest from the lab</p><h2>What has my <em>attention.</em></h2></div></div>
+    <div class="latest-list">
+      {catchup && <a href={`/catchups/${catchup.id}/`}><span class="latest-kind">AI catchup</span><div><h3>{catchup.data.title}</h3><p>{catchup.data.description}</p></div><b>Read →</b></a>}
+      {writing.map((post) => <a href={`/writing/${post.id}/`}><span class="latest-kind">Note</span><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><b>Read →</b></a>)}
+      {personalProjects.map((project) => <a href={`/projects/${project.id}/`}><span class="latest-kind">Project</span><div><h3>{project.data.title}</h3><p>{project.data.description}</p></div><b>Explore →</b></a>)}
     </div>
+
     <div class="rule"></div>
-    <p class="eyebrow">Selected work</p>
-    <div class="grid">
-      {projects.map((project) => <a class="card" href={`/work/${project.id}/`}>
-        <div class="card-meta"><span>{project.data.category}</span><span>{project.data.confidential ? 'Sanitized case study' : 'Case study'} ↗</span></div>
-        <h3>{project.data.title}</h3><p>{project.data.description}</p>
-        <div class="card-bottom"><div class="tags">{project.data.technologies.slice(0, 3).map((tag) => <span class="tag">{tag}</span>)}</div><span>Read →</span></div>
-      </a>)}
-    </div>
+    <div class="split-section"><div><p class="eyebrow">Featured systems</p><h2>Work that made it <em>out of the lab.</em></h2><a class="small-link" href="/work/">View all professional work →</a></div><div class="mini-work">{projects.map((project) => <a href={`/work/${project.id}/`}><span>{project.data.category}</span><strong>{project.data.title}</strong><b>Open case study ↗</b></a>)}</div></div>
+
     <div class="rule"></div>
-    <div style="display:flex;justify-content:space-between;align-items:end;gap:25px"><div><p class="eyebrow">From the notebook</p><h2>Ideas in <em>progress.</em></h2></div><a href="/writing/">All writing →</a></div>
-    <div class="article-list">{posts.map((post) => <a class="article-row" href={`/writing/${post.id}/`}><time>{post.data.published.toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' })}</time><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><span class="reading">{post.data.readingTime ?? 'Notes'} ↗</span></a>)}</div>
+    <div class="interest-block"><div><p class="eyebrow">The wider curiosity</p><h2>Applied AI, research, and the space <em>between them.</em></h2></div><div><p class="copy">I’m interested in how people learn difficult things, how interfaces change the way we think, and how small tools can make a day feel less complicated.</p><div class="interest-tags">{(profile?.data.interests ?? []).map((interest) => <span>{interest}</span>)}</div></div></div>
   </div>
 </BaseLayout>
+
+<style>
+  .hero-links { display:flex; gap:22px; flex-wrap:wrap; align-items:center; margin-top:10px; color:var(--accent); font-size:13px; }.hero-links .button { color:var(--ink); }.hero-links .button:hover { color:var(--paper); }
+  .current-signal { display:grid; grid-template-columns:1.1fr .9fr; gap:70px; align-items:end; margin-top:110px; padding:25px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }.current-signal h2 { max-width:560px; font-size:clamp(30px,4vw,49px); }.current-signal > p { max-width:310px; margin:0; color:#5d655d; font-size:14px; }
+  .section-heading { display:flex; justify-content:space-between; align-items:end; gap:24px; }.field-map { display:grid; grid-template-columns:repeat(2,1fr); margin-top:45px; border-top:1px solid var(--line); border-left:1px solid var(--line); }.field-map a { min-height:190px; padding:19px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }.field-map a:hover { background:var(--soft); }.field-map span,.latest-kind { color:var(--accent); font-size:11px; }.field-map strong { display:block; margin-top:33px; font-size:22px; letter-spacing:-.04em; }.field-map p { margin:8px 0 20px; color:#5d655d; font-size:13px; }.field-map b,.small-link { color:var(--accent); font-size:12px; }
+  .latest-list { margin-top:45px; border-top:1px solid var(--line); }.latest-list a { display:grid; grid-template-columns:120px 1fr 90px; gap:25px; padding:20px 0; border-bottom:1px solid var(--line); }.latest-list a:hover h3 { color:var(--accent); }.latest-list h3 { font-size:22px; }.latest-list p { margin:5px 0 0; color:#5d655d; font-size:13px; }.latest-list b { color:var(--accent); font-size:12px; text-align:right; }
+  .split-section { display:grid; grid-template-columns:1fr 1fr; gap:75px; }.mini-work { border-top:1px solid var(--line); }.mini-work a { display:flex; flex-direction:column; gap:7px; padding:16px 0; border-bottom:1px solid var(--line); }.mini-work a:hover strong { color:var(--accent); }.mini-work span,.mini-work b { color:var(--muted); font-size:11px; }.mini-work strong { font-size:21px; }.interest-block { display:grid; grid-template-columns:1fr 1fr; gap:80px; }.copy { max-width:580px; margin:0 0 24px; color:#555d56; font-size:17px; }.interest-tags { display:flex; flex-wrap:wrap; gap:7px; }.interest-tags span { padding:5px 9px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:11px; }
+  @media(max-width:700px) { .current-signal,.split-section,.interest-block { grid-template-columns:1fr; gap:28px; }.field-map { grid-template-columns:1fr; }.latest-list a { grid-template-columns:1fr; gap:7px; }.latest-list b { text-align:left; }.section-heading { align-items:start; flex-direction:column; } }
+</style>

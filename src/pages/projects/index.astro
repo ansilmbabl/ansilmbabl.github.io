@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const projects = (await getCollection('projects')).filter((project) => !project.data.draft).sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title="Personal projects"><div class="page-wrap"><p class="eyebrow">Projects / Independent work</p><h1>Things I’m building <em>for myself.</em></h1><p class="intro">Experiments and longer-running projects that sit outside my day job. Some are shipped, some are still becoming clear.</p><div class="grid">{projects.map((project) => <a class="card" href={`/projects/${project.id}/`}><div class="card-meta"><span>{project.data.type}</span><span>{project.data.status}</span></div><h3>{project.data.title}</h3><p>{project.data.description}</p><div class="card-bottom"><div class="tags">{project.data.technologies.slice(0, 3).map((tag) => <span class="tag">{tag}</span>)}</div><span>Explore →</span></div></a>)}</div></div></BaseLayout>

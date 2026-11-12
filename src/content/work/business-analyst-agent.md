@@ -1,6 +1,6 @@
 ---
-title: "MCP-enabled Business Analyst Agent"
-description: "A sanitized case study about turning a financial-services MIS into a tool other applications could use directly."
+title: "Business Analyst Agent"
+description: "Built and deployed a production Business Analyst agent for a financial-services MIS, combining five agents, fourteen tools, RAG, evaluation, and MCP integration to reduce a reporting workflow from roughly two months to two weeks."
 category: "Agent systems"
 organization: "Grid Dynamics · supporting Visa"
 order: 1

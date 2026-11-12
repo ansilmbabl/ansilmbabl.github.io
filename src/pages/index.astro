@@ -22,7 +22,7 @@ const playground = (await getCollection('playground')).filter((entry) => entry.d
     <div class="section-heading"><div><p class="eyebrow">Latest from the lab</p><h2>What has my <em>attention.</em></h2></div></div>
     <div class="latest-list">
       {catchup && <a href={`/catchups/${catchup.id}/`}><span class="latest-kind">AI catchup</span><div><h3>{catchup.data.title}</h3><p>{catchup.data.description}</p></div><b>Read →</b></a>}
-      {writing.map((post) => <a href={`/writing/${post.id}/`}><span class="latest-kind">Note</span><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><b>Read →</b></a>)}
+      {writing.map((post) => <a href={`/blogs/${post.id}/`}><span class="latest-kind">Blog</span><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><b>Read →</b></a>)}
       {personalProjects.map((project) => <a href={`/projects/${project.id}/`}><span class="latest-kind">Project</span><div><h3>{project.data.title}</h3><p>{project.data.description}</p></div><b>Explore →</b></a>)}
     </div>
 

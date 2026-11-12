@@ -5,9 +5,9 @@ import { getCollection } from 'astro:content';
 const career = (await getCollection('career')).filter((entry) => !entry.data.draft).sort((a, b) => a.data.order - b.data.order);
 const education = (await getCollection('education')).filter((entry) => !entry.data.draft).sort((a, b) => a.data.order - b.data.order);
 ---
-<BaseLayout title="About">
+<BaseLayout title="Journey">
   <div class="page-wrap">
-    <p class="eyebrow">About / Context</p><h1>How I <em>work, learn,</em> and build.</h1>
+    <p class="eyebrow">Journey / Context</p><h1>How I <em>work, learn,</em> and build.</h1>
     <div class="about-grid">
       <div><p>I’m an AI/ML Engineer and Data Scientist based in Bengaluru. I build systems that connect models to data, APIs, tools, and people—not just isolated demos.</p><p>My work has moved across financial services, pharmaceutical research, market research, oil and gas, trading-card intelligence, and internal workflow automation.</p></div>
       <div><p>I enjoy the space where technical decisions meet user feedback: understanding the real problem, making the system dependable, and iterating until it becomes useful.</p></div>

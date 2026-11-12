@@ -1,0 +1,6 @@
+<section class="demo demo-agent" aria-label="Agent workflow simulator">
+  <div class="demo-top"><div><span class="demo-kicker">CONTROLLED SIMULATION</span><h2>What happens when an agent meets friction?</h2></div><span class="demo-status">NO LIVE MODEL</span></div>
+  <div class="scenario-row"><button class="demo-button active" data-scenario="normal">Normal path</button><button class="demo-button" data-scenario="timeout">Tool timeout</button><button class="demo-button" data-scenario="weak">Weak evidence</button></div>
+  <div class="agent-trace"><div class="trace-node done"><b>Planner</b><span>Break down request</span></div><div class="trace-arrow">↓</div><div class="trace-node done"><b>Retriever</b><span>Find relevant context</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="validator"><b>Validator</b><span>Check evidence and constraints</span></div><div class="trace-arrow">↓</div><div class="trace-node pending" data-agent-step="response"><b>Response</b><span>Return useful result</span></div></div>
+  <div class="agent-message" data-agent-message>Choose a failure mode to see how the workflow recovers.</div>
+</section>

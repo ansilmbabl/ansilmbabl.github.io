@@ -76,6 +76,7 @@ const playground = defineCollection({
     kind: z.string(),
     status: z.enum(['planned', 'building', 'live']).default('planned'),
     href: z.string().optional(),
+    demoPath: z.string().optional(),
     order: z.number(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),

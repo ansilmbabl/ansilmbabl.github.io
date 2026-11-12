@@ -2,7 +2,8 @@
 title: "Daily AI catchup"
 description: "A public, human-reviewed signal from my local agents about interesting developments in AI."
 kind: "Live experiment"
-status: "building"
+status: "live"
+demoPath: "/playground/local-agent-catchup/"
 order: 1
 featured: true
 ---

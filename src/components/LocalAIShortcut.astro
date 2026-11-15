@@ -13,7 +13,7 @@ const prompt = pathname.startsWith('/projects/')
 const href = `/playground/local-ai-chat/${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ''}`;
 ---
 
-{showShortcut && <a class="local-ai-shortcut" href={href} aria-label="Open Ansil’s local AI chatbot">
+{showShortcut && <a class="local-ai-shortcut" href={href} aria-label="Open the experimental local AI assistant">
   <span class="shortcut-orb" aria-hidden="true">✦</span>
   <span class="shortcut-copy"><strong>Ask local AI</strong><small>Runs in your browser</small></span>
 </a>}

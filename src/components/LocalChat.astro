@@ -29,24 +29,36 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     <main class="chat-main">
       <div class="chat-messages" data-messages aria-live="polite">
         <section class="welcome-state" data-welcome>
-          <h1>Experimental AI assistant</h1>
-          <p>Chat with Hugging Face models in your browser. Ask general questions or explore the public profile context.</p>
+          <h1>Run an AI assistant in your browser</h1>
+          <p>No installation required. Start a local model, ask about Ansil or your own notes, and try live AI web search when you need current information.</p>
+          <div class="capability-row" aria-label="Assistant capabilities">
+            <span><b>Local chat</b><small>Inference stays here</small></span>
+            <span class="capability-notes"><b>Your notes</b><small>Indexed in-browser</small></span>
+            <span class="capability-web"><b>Live web search</b><small>Only the query leaves</small></span>
+          </div>
           <div class="model-start" data-model-start>
-            <div><strong>Choose a local chat model</strong><span data-model-note>First visit downloads about 500 MB and caches it in your browser. Smaller models may be less reliable.</span></div>
+            <div><strong>Start your local chat</strong><span data-model-note>First visit downloads about 500 MB and caches it in your browser. No installation required; smaller models may be less reliable.</span></div>
             <div class="model-controls">
-              <label class="model-select-label" for="local-chat-model">Generation model<select id="local-chat-model" data-model-select>{localChatModels.map((model) => <option value={model.id}>{model.label} · {model.description}</option>)}</select></label>
-              <label class="model-select-label" for="local-chat-retrieval-model">Retrieval model<select id="local-chat-retrieval-model" data-retrieval-select>{localChatRetrievalModels.map((model) => <option value={model.id}>{model.label} · {model.description}</option>)}</select></label>
-              <button type="button" class="start-button" data-start>Start local chat</button>
-              <button type="button" class="change-model-button" data-change-model hidden>Change model</button>
+              <details class="model-settings">
+                <summary>Advanced model settings</summary>
+                <div class="model-selectors">
+                  <label class="model-select-label" for="local-chat-model">Generation model<select id="local-chat-model" data-model-select>{localChatModels.map((model) => <option value={model.id}>{model.label} · {model.description}</option>)}</select></label>
+                  <label class="model-select-label" for="local-chat-retrieval-model">Retrieval model<select id="local-chat-retrieval-model" data-retrieval-select>{localChatRetrievalModels.map((model) => <option value={model.id}>{model.label} · {model.description}</option>)}</select></label>
+                </div>
+              </details>
+              <div class="model-actions">
+                <button type="button" class="start-button" data-start>Start local chat</button>
+                <button type="button" class="change-model-button" data-change-model hidden>Change model</button>
+              </div>
+            </div>
+            <div class="download-panel" data-progress-wrap hidden>
+              <div class="download-heading"><strong data-download-title>Downloading local model</strong><b data-progress-value>0%</b></div>
+              <div class="download-track"><i data-progress-bar></i></div>
+              <small data-download-stage>Preparing the browser runtime</small>
+              <small data-download-note>Keep this tab open while the model is prepared.</small>
             </div>
           </div>
-          <div class="download-panel" data-progress-wrap hidden>
-            <div class="download-heading"><strong data-download-title>Downloading local model</strong><b data-progress-value>0%</b></div>
-            <div class="download-track"><i data-progress-bar></i></div>
-            <small data-download-stage>Preparing the browser runtime</small>
-            <small data-download-note>Keep this tab open while the model is prepared.</small>
-          </div>
-          <button class="custom-sources-trigger" type="button" data-open-custom>＋ Add your own notes</button>
+          <p class="load-hint" data-load-hint>Start the local model before sending a message. Your browser will cache it for later visits.</p>
           <dialog class="custom-sources-dialog" data-custom-dialog aria-labelledby="custom-sources-title">
             <div class="custom-sources-body">
               <div class="custom-sources-heading"><div><span class="custom-sources-kicker">Local knowledge</span><h2 id="custom-sources-title">Add your own notes</h2></div><button class="custom-sources-close" type="button" data-close-custom aria-label="Close notes dialog">×</button></div>
@@ -65,12 +77,11 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
               <button class="source-preview-close" type="button" data-close-source-preview>Close preview</button>
             </div>
           </dialog>
-          <button class="web-news-trigger" type="button" data-prompt="Search latest AI news"><span>Web search</span><b>Search latest AI news</b></button>
           <div class="prompt-grid" aria-label="Suggested questions">
             <button type="button" data-prompt="Who is Ansil?"><span>About Ansil</span><b>Who is Ansil?</b></button>
-            <button type="button" data-prompt="What kind of AI work has Ansil done?"><span>Experience</span><b>What kind of AI work has Ansil done?</b></button>
+            <button type="button" class="notes-prompt-card" data-note-prompt="Tell me about the notes I have uploaded."><span>Your notes</span><b>Tell me about the notes I have uploaded</b></button>
             <button type="button" data-prompt="Explain one of Ansil’s projects."><span>Projects</span><b>Explain one of Ansil’s projects.</b></button>
-            <button type="button" data-prompt="How does this chatbot work?"><span>This demo</span><b>How does this chatbot work?</b></button>
+            <button type="button" class="web-prompt-card" data-prompt="Search latest AI news"><span>Live web search</span><b>Search latest AI news</b></button>
           </div>
         </section>
       </div>
@@ -78,10 +89,15 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
       <div class="composer-area">
         <form class="chat-form" data-chat-form>
           <label class="sr-only" for="local-chat-input">Message the local assistant</label>
+          <button class="composer-tool" type="button" data-open-custom aria-label="Add notes" title="Add notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16.5 6.5-7.8 7.8a3 3 0 0 0 4.2 4.2l7-7a4.5 4.5 0 0 0-6.4-6.4l-7.1 7.1a6 6 0 0 0 8.5 8.5l6.2-6.2" /></svg><b class="composer-note-count" data-note-count>0</b><span class="sr-only">Add notes</span></button>
           <textarea id="local-chat-input" data-input rows="1" autocomplete="off" placeholder="Ask a general question or explore the profile context…" disabled></textarea>
           <button class="send-button" type="submit" data-send aria-label="Send message" disabled>↑</button>
           <button class="stop-button" type="button" data-stop aria-label="Stop generation" hidden>■</button>
         </form>
+        <div class="composer-tools">
+          <span class="composer-hint">Ask about Ansil, your notes, or try “Search latest AI news”. Enter to send · Shift+Enter for a new line.</span>
+          <span class="composer-mode" data-composer-mode>Local model · notes stay in this browser</span>
+        </div>
         <div class="composer-meta"><span data-status aria-live="polite">Choose a model and start local chat</span><span data-detail>Private by design · messages stay in this browser</span></div>
       </div>
     </main>
@@ -117,6 +133,44 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
   @media(max-width:700px) { .local-chat { min-height:calc(100vh - 112px); padding:0 0 18px; }.chat-workspace { min-height:calc(100vh - 130px); border-right:0; border-left:0; border-radius:0; }.chat-topbar { padding:13px 16px; }.chat-brand { min-width:0; }.chat-brand small { display:none; }.runtime-pills { justify-content:flex-end; gap:4px; }.runtime-pill { padding:5px 7px; }.runtime-pill:not(:first-child) { font-size:0; }.local-pill,.runtime-details { display:none; }.reset-button { font-size:0; }.reset-button::after { content:'＋'; font-size:18px; }.chat-messages { padding:32px 18px 12px; }.welcome-state>p { font-size:14px; }.model-start { align-items:stretch; }.model-controls { align-items:stretch; flex-direction:column; }.model-select-label,.model-select-label select { width:100%; max-width:none; }.start-button,.change-model-button { width:100%; }.prompt-grid { grid-template-columns:1fr; }.prompt-grid button { min-height:64px; }.chat-message p { max-width:88%; }.chat-message.assistant { padding-left:30px; }.chat-message.assistant p { max-width:96%; }.composer-area { padding:10px 16px 14px; }.composer-meta { font-size:9px; }.composer-meta span:last-child { display:none; }.generation-meta { justify-content:flex-start; padding-left:18px; padding-right:18px; } }
 </style>
 
+<style is:global>
+  .prompt-grid .web-prompt-card { border-color: #d8c89e; background: #fffaf0; }
+  .prompt-grid .web-prompt-card span { color: #80652f; }
+  .prompt-grid .web-prompt-card:hover:not(:disabled) { border-color: #a58a50; background: #fff5dc; }
+  .prompt-grid .notes-prompt-card { border-color: #b8cce1; background: #f2f7fc; }
+  .prompt-grid .notes-prompt-card span { color: #416b92; }
+  .prompt-grid .notes-prompt-card:hover:not(:disabled) { border-color: #7da4c8; background: #eaf3fb; }
+  .capability-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:100%; margin:0 0 18px; text-align:left; }
+  .capability-row span { display:grid; gap:3px; padding:9px 10px; border:1px solid var(--line); border-radius:9px; background:rgba(255,255,255,.62); }
+  .capability-row b { color:var(--ink); font-size:10px; font-weight:600; }
+  .capability-row small { color:var(--muted); font-size:9px; line-height:1.3; }
+  .capability-row .capability-notes { border-color:#b8cce1; background:#f2f7fc; }
+  .capability-row .capability-notes b { color:#416b92; }
+  .capability-row .capability-web { border-color:#d8c89e; background:#fffaf0; }
+  .load-hint { margin:-8px 0 17px; color:var(--muted); font-size:10px; line-height:1.4; }
+  .load-hint[hidden] { display:none; }
+  .model-controls { align-items: stretch; flex-direction: column; }
+  .model-settings { width: 100%; padding: 9px 11px; border: 1px solid #b9d6c5; border-radius: 9px; background: rgba(255,255,255,.6); }
+  .model-settings summary { color: var(--accent); cursor: pointer; font-size: 10px; font-weight: 600; list-style: none; }
+  .model-settings summary::-webkit-details-marker { display: none; }
+  .model-settings summary::after { content: '＋'; float: right; font-size: 13px; }
+  .model-settings[open] summary::after { content: '−'; }
+  .model-selectors { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 10px; }
+  .model-actions { display: flex; gap: 8px; }
+  .model-actions .start-button, .model-actions .change-model-button { flex: 0 0 auto; }
+  .composer-tools { display: flex; align-items: center; gap: 10px; max-width: 730px; margin: 8px auto 0; }
+  .composer-tool { display:grid; place-items:center; width:30px; height:30px; padding:0; border:1px solid var(--line); border-radius:9px; background:transparent; color:var(--accent); cursor:pointer; }
+  .chat-form textarea { padding-left: 56px; }
+  .chat-form .composer-tool { position:absolute; left:12px; bottom:13px; z-index:1; }
+  .composer-tool svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.7; }
+  .composer-note-count { position:absolute; top:-5px; right:-5px; display:grid; place-items:center; min-width:15px; height:15px; padding:0 3px; border:2px solid #fff; border-radius:999px; background:#416b92; color:#fff; font-size:8px; font-weight:700; line-height:1; }
+  .composer-note-count[hidden] { display:none; }
+  .composer-tool:hover { border-color: #9ec5b2; background: #f2f8f3; }
+  .composer-hint, .composer-mode { color: var(--muted); font-size: 9px; }
+  .composer-mode { margin-left: auto; }
+  @media(max-width:700px) { .capability-row { grid-template-columns:1fr; gap:6px; } .capability-row span { grid-template-columns:1fr auto; align-items:center; } .model-selectors { grid-template-columns: 1fr; } .composer-tools { align-items: flex-start; flex-wrap: wrap; } .composer-mode { width: 100%; margin-left: 0; } .composer-hint { flex: 1; line-height: 1.4; } }
+</style>
+
 <script type="application/json" id="local-ai-corpus" set:html={JSON.stringify(corpus)}></script>
 <script type="application/json" id="local-ai-models" set:html={JSON.stringify(localChatModels)}></script>
 <script type="application/json" id="local-ai-retrieval-models" set:html={JSON.stringify(localChatRetrievalModels)}></script>
@@ -138,6 +192,8 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     const send = root.querySelector('[data-send]');
     const stop = root.querySelector('[data-stop]');
     const status = root.querySelector('[data-status]');
+    const loadHint = root.querySelector('[data-load-hint]');
+    const composerMode = root.querySelector('[data-composer-mode]');
     const modelState = root.querySelector('[data-model-state]');
     const readyDot = root.querySelector('[data-ready-dot]');
     const backendLabel = root.querySelector('[data-backend]');
@@ -164,12 +220,14 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     const customFiles = root.querySelector('[data-custom-files]');
     const customDialog = root.querySelector('[data-custom-dialog]');
     const openCustomButton = root.querySelector('[data-open-custom]');
+    const openCustomButtons = root.querySelectorAll('[data-open-custom]');
     const closeCustomButton = root.querySelector('[data-close-custom]');
     const addCustomButton = root.querySelector('[data-add-custom]');
     const clearCustomButton = root.querySelector('[data-clear-custom]');
     const customStatus = root.querySelector('[data-custom-status]');
     const customList = root.querySelector('[data-custom-list]');
     const customItems = root.querySelector('[data-custom-items]');
+    const noteCount = root.querySelector('[data-note-count]');
     const sourcePreview = root.querySelector('[data-source-preview]');
     const sourcePreviewTitle = root.querySelector('[data-source-preview-title]');
     const sourcePreviewMeta = root.querySelector('[data-source-preview-meta]');
@@ -202,6 +260,7 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
       if (!customList || !customItems) return;
       customItems.replaceChildren();
       customList.hidden = customEntries.length === 0;
+      if (noteCount) { noteCount.textContent = String(customEntries.length); noteCount.hidden = false; }
       customEntries.forEach((entry, index) => {
         const row = document.createElement('div');
         row.className = 'custom-note-row';
@@ -229,6 +288,7 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     };
     rebuildChunks();
     renderCustomEntries();
+    const setComposerMode = (value) => { if (composerMode) composerMode.textContent = value; };
     const setProgress = (value, label) => { if (!progressWrap) return; progressWrap.hidden = false; const percent = Math.max(0, Math.min(100, Math.round(value ?? 0))); if (progressValue) progressValue.textContent = `${percent}%`; if (progressBar) progressBar.style.width = `${percent}%`; if (label && downloadTitle) downloadTitle.textContent = label; if (label && downloadStage) downloadStage.textContent = label; };
     const scrollMessages = () => messages?.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
     const escapeHtml = (value) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -292,18 +352,19 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     stop?.addEventListener('click', () => { stopRequested = true; generationController?.abort(); });
     input?.addEventListener('input', resizeInput);
     input?.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form?.requestSubmit(); } });
-    const enableChat = () => { input?.removeAttribute('disabled'); if (input) input.placeholder = 'Ask a general question or explore the profile context…'; if (send) send.disabled = false; };
+    const enableChat = () => { input?.removeAttribute('disabled'); if (input) input.placeholder = 'Ask a general question or explore the profile context…'; if (send) send.disabled = false; loadHint?.setAttribute('hidden', ''); setComposerMode('Local model ready · web search available'); };
     const classifyLoadError = (error) => { const message = String(error?.message ?? error).toLowerCase(); if (message.includes('fetch') || message.includes('network') || message.includes('download') || message.includes('404')) return 'The model download could not finish. Check your connection and retry.'; if (message.includes('webgpu') || message.includes('gpu')) return 'WebGPU could not initialize. Retry to continue with the WASM-compatible local model path.'; if (message.includes('memory') || message.includes('allocation')) return 'This device may not have enough memory for the selected model. Choose a smaller model and retry.'; return 'The local model could not initialize. No generated answer will be shown until you retry.'; };
     const startLocalChat = async () => { if (modelReady || isBusy) return; if (!('WebAssembly' in window)) { fallbackMode = true; if (modelState) modelState.textContent = 'Model unavailable'; setStatus('WebAssembly is unavailable · retry the local model'); return; } isBusy = true; const started = performance.now(); const model = selectedModel(); if (startButton) { startButton.disabled = true; startButton.textContent = 'Loading…'; } if (modelSelect) modelSelect.disabled = true; if (changeModelButton) changeModelButton.hidden = true; if (modelState) modelState.textContent = 'Loading model'; setStatus(`Preparing ${model?.label ?? 'local model'}…`); if (downloadTitle) downloadTitle.textContent = `Downloading ${model?.label ?? 'local model'}`; if (downloadStage) downloadStage.textContent = 'Preparing the browser runtime'; if (downloadNote) downloadNote.textContent = 'This can take a few minutes on the first visit. It will be cached afterward.'; if (progressWrap) progressWrap.hidden = false; try { await getGenerator(); modelReady = true; if (modelState) modelState.textContent = 'Model ready'; readyDot?.classList.add('ready'); if (progressValue) progressValue.textContent = '100%'; if (progressBar) progressBar.style.width = '100%'; if (downloadTitle) downloadTitle.textContent = 'Local model ready'; if (downloadStage) downloadStage.textContent = 'Ready for private conversation'; if (downloadNote) downloadNote.textContent = `Cached in this browser · loaded in ${((performance.now() - started) / 1000).toFixed(1)}s`; if (startButton) startButton.hidden = true; if (changeModelButton) changeModelButton.hidden = false; enableChat(); setStatus('Ready'); } catch (error) { console.error(error); generatorPromise = undefined; fallbackMode = true; if (modelSelect) modelSelect.disabled = false; if (modelState) modelState.textContent = 'Model unavailable'; if (downloadTitle) downloadTitle.textContent = 'Model unavailable'; if (downloadStage) downloadStage.textContent = 'No generated answer will be shown until the model loads'; if (downloadNote) downloadNote.textContent = classifyLoadError(error); if (startButton) { startButton.disabled = false; startButton.textContent = 'Retry local model'; } setStatus('Model unavailable · retry to continue'); } finally { isBusy = false; } };
     startButton?.addEventListener('click', startLocalChat);
     modelSelect?.addEventListener('change', () => { if (!modelReady) { generatorPromise = undefined; fallbackMode = false; updateModelDetails(); setStatus(`${selectedModel()?.label ?? 'Model'} selected`); } });
     retrievalSelect?.addEventListener('change', () => { extractorPromise = undefined; chunkEmbeddings = undefined; updateModelDetails(); setStatus(`${selectedRetrievalModel()?.label ?? 'Retrieval model'} selected · it will load on the next grounded question`); });
-    openCustomButton?.addEventListener('click', () => customDialog?.showModal());
+    openCustomButtons.forEach((button) => button.addEventListener('click', () => customDialog?.showModal()));
     closeCustomButton?.addEventListener('click', () => customDialog?.close());
     customFiles?.addEventListener('change', async () => { const files = [...(customFiles.files ?? [])]; if (!files.length || !customText) return; const contents = await Promise.all(files.map((file) => new Promise((resolve) => { const reader = new FileReader(); reader.onload = () => resolve(`# ${file.name}\n${String(reader.result ?? '')}`); reader.onerror = () => resolve(''); reader.readAsText(file); }))); customText.value = [customText.value.trim(), ...contents.filter(Boolean)].filter(Boolean).join('\n\n'); setStatus(`${files.length} local file${files.length === 1 ? '' : 's'} ready to add`); });
     addCustomButton?.addEventListener('click', () => { const content = String(customText?.value ?? '').trim(); if (!content) { if (customStatus) customStatus.textContent = 'Add text or a .txt/.md file first'; return; } customEntries.push({ id: `custom-${Date.now()}`, title: `Your notes ${customEntries.length + 1}`, kind: 'Custom notes', origin: 'Your notes', href: '', content }); rebuildChunks(); renderCustomEntries(); if (customText) customText.value = ''; if (customFiles) customFiles.value = ''; if (customStatus) customStatus.textContent = `${customEntries.length} custom note${customEntries.length === 1 ? '' : 's'} · local only`; setStatus('Custom notes added to local retrieval'); customDialog?.close(); });
     clearCustomButton?.addEventListener('click', () => { customEntries.length = 0; rebuildChunks(); renderCustomEntries(); if (customText) customText.value = ''; if (customFiles) customFiles.value = ''; if (customStatus) customStatus.textContent = 'No custom notes'; setStatus('Custom notes cleared'); });
     changeModelButton?.addEventListener('click', () => { if (isBusy) return; modelReady = false; fallbackMode = false; generatorPromise = undefined; if (modelSelect) modelSelect.disabled = false; if (startButton) { startButton.hidden = false; startButton.disabled = false; startButton.textContent = 'Start local chat'; } changeModelButton.hidden = true; history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Choose another model to start a new conversation'); updateModelDetails(); });
+    root.querySelectorAll('[data-note-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.notePrompt ?? ''; if (!customEntries.length) { customDialog?.showModal(); if (customStatus) customStatus.textContent = 'Add notes before asking about them'; return; } if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus('Start local chat to ask about your notes'); } }));
     root.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.prompt ?? ''; if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus('Start local chat to send this question'); } }));
     root.querySelector('[data-reset]')?.addEventListener('click', () => { history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Ready for a new conversation'); input?.focus(); });
     if ('gpu' in navigator) { if (backendLabel) backendLabel.textContent = 'WebGPU available'; } else if (backendLabel) backendLabel.textContent = 'WASM fallback';

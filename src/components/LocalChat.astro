@@ -30,7 +30,6 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
       <div class="chat-messages" data-messages aria-live="polite">
         <section class="welcome-state" data-welcome>
           <h1>Run an AI assistant in your browser</h1>
-          <p>No installation required. Start a local model, ask about Ansil or your own notes, and try live AI web search when you need current information.</p>
           <div class="capability-row" aria-label="Assistant capabilities">
             <span><b>Local chat</b><small>Inference stays here</small></span>
             <span class="capability-notes"><b>Your notes</b><small>Indexed in-browser</small></span>
@@ -94,11 +93,7 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
           <button class="send-button" type="submit" data-send aria-label="Send message" disabled>↑</button>
           <button class="stop-button" type="button" data-stop aria-label="Stop generation" hidden>■</button>
         </form>
-        <div class="composer-tools">
-          <span class="composer-hint">Ask about Ansil, your notes, or try “Search latest AI news”. Enter to send · Shift+Enter for a new line.</span>
-          <span class="composer-mode" data-composer-mode>Local model · notes stay in this browser</span>
-        </div>
-        <div class="composer-meta"><span data-status aria-live="polite">Choose a model and start local chat</span><span data-detail>Private by design · messages stay in this browser</span></div>
+        <div class="composer-meta"><span data-status aria-live="polite"></span></div>
       </div>
     </main>
 
@@ -364,12 +359,12 @@ import systemPrompt from '../data/localChatSystemPrompt.md?raw';
     addCustomButton?.addEventListener('click', () => { const content = String(customText?.value ?? '').trim(); if (!content) { if (customStatus) customStatus.textContent = 'Add text or a .txt/.md file first'; return; } customEntries.push({ id: `custom-${Date.now()}`, title: `Your notes ${customEntries.length + 1}`, kind: 'Custom notes', origin: 'Your notes', href: '', content }); rebuildChunks(); renderCustomEntries(); if (customText) customText.value = ''; if (customFiles) customFiles.value = ''; if (customStatus) customStatus.textContent = `${customEntries.length} custom note${customEntries.length === 1 ? '' : 's'} · local only`; setStatus('Custom notes added to local retrieval'); customDialog?.close(); });
     clearCustomButton?.addEventListener('click', () => { customEntries.length = 0; rebuildChunks(); renderCustomEntries(); if (customText) customText.value = ''; if (customFiles) customFiles.value = ''; if (customStatus) customStatus.textContent = 'No custom notes'; setStatus('Custom notes cleared'); });
     changeModelButton?.addEventListener('click', () => { if (isBusy) return; modelReady = false; fallbackMode = false; generatorPromise = undefined; if (modelSelect) modelSelect.disabled = false; if (startButton) { startButton.hidden = false; startButton.disabled = false; startButton.textContent = 'Start local chat'; } changeModelButton.hidden = true; history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Choose another model to start a new conversation'); updateModelDetails(); });
-    root.querySelectorAll('[data-note-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.notePrompt ?? ''; if (!customEntries.length) { customDialog?.showModal(); if (customStatus) customStatus.textContent = 'Add notes before asking about them'; return; } if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus('Start local chat to ask about your notes'); } }));
-    root.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.prompt ?? ''; if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus('Start local chat to send this question'); } }));
+    root.querySelectorAll('[data-note-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.notePrompt ?? ''; if (!customEntries.length) { customDialog?.showModal(); if (customStatus) customStatus.textContent = 'Add notes before asking about them'; return; } if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus(''); } }));
+    root.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => { const question = button.dataset.prompt ?? ''; if (modelReady || fallbackMode) answer(question); else if (input) { input.value = question; resizeInput(); input.focus(); setStatus(''); } }));
     root.querySelector('[data-reset]')?.addEventListener('click', () => { history.length = 0; if (messages) messages.innerHTML = ''; messages?.append(welcome); welcome?.removeAttribute('hidden'); if (generationMeta) generationMeta.hidden = true; setStatus('Ready for a new conversation'); input?.focus(); });
     if ('gpu' in navigator) { if (backendLabel) backendLabel.textContent = 'WebGPU available'; } else if (backendLabel) backendLabel.textContent = 'WASM fallback';
     updateModelDetails();
     const contextualPrompt = new URLSearchParams(location.search).get('prompt');
-    if (contextualPrompt && input) { input.value = contextualPrompt; resizeInput(); setStatus('Start local chat to send this question'); }
+    if (contextualPrompt && input) { input.value = contextualPrompt; resizeInput(); setStatus(''); }
   }
 </script>

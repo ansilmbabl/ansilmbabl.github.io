@@ -11,12 +11,22 @@ const playground = (await getCollection('playground')).filter((entry) => entry.d
 ---
 <BaseLayout title={profile?.data.name ?? 'Ansil M B'} description={profile?.data.headline}>
   <div class="page-wrap home">
-    <h1>{profile?.data.headline ?? 'I like to dig deeper into AI.'}</h1>
-    <p class="intro">I build applied AI systems for real business problems, explore the research underneath them, and document what I learn along the way.</p>
+    <section class="home-hero">
+      <div class="hero-copy">
+        <h1>{profile?.data.headline ?? 'I like to dig deeper into AI.'}</h1>
+        <p class="intro">I build applied AI systems for real business problems, explore the research underneath them, and document what I learn along the way.</p>
+      </div>
+      <div class="hero-art"><img src="/images/ai-systems-hero.webp" alt="Abstract diagram of connected applied AI systems" /></div>
+    </section>
 
     <div class="rule"></div>
     <div class="section-heading"><div><p class="eyebrow">Explore</p><h2>Different ways to <em>look closer.</em></h2></div></div>
     <div class="field-map"><a href="/work/"><span>01</span><strong>Professional work</strong><p>Systems I’ve built with teams and companies.</p><b>Go to work →</b></a><a href="/projects/"><span>02</span><strong>Personal projects</strong><p>Longer-running questions I’m exploring for myself.</p><b>Go to projects →</b></a><a href="/blogs/"><span>03</span><strong>Blogs</strong><p>Technical writing, research trails, and AI catchups.</p><b>Go to blogs →</b></a><a href="/playground/"><span>04</span><strong>Playground</strong><p>Small demos and ideas you can experience.</p><b>Enter playground →</b></a></div>
+
+    <div class="feature-visuals">
+      <a href="/playground/local-ai-chat/" class="feature-visual feature-visual-chat"><img src="/images/local-ai-chat.webp" alt="Editorial illustration of a browser-local AI chat workspace" /><div><span class="eyebrow">Try it locally</span><h3>Chat with a model that runs in your browser.</h3><b>Open local AI →</b></div></a>
+      <a href="/playground/architecture-builder/" class="feature-visual"><img src="/images/applied-ai-pipeline.webp" alt="Diagram of an applied AI pipeline from documents to useful outcomes" /><div><span class="eyebrow">Build the system</span><h3>Explore how retrieval, tools, and evaluation fit together.</h3><b>Open architecture builder →</b></div></a>
+    </div>
 
     <div class="rule"></div>
     <div class="section-heading"><div><p class="eyebrow">Latest from the lab</p><h2>What has my <em>attention.</em></h2></div></div>
@@ -32,9 +42,21 @@ const playground = (await getCollection('playground')).filter((entry) => entry.d
 </BaseLayout>
 
 <style>
+  .home-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,.9fr); align-items:center; gap:58px; }
+  .hero-copy { max-width:640px; }
+  .hero-art { overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#f1efe8; box-shadow:0 14px 38px rgba(32,37,34,.08); }
+  .hero-art img { display:block; width:100%; aspect-ratio:1.22; object-fit:cover; mix-blend-mode:multiply; }
+  .feature-visuals { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin:44px 0 8px; }
+  .feature-visual { display:grid; grid-template-rows:auto 1fr; overflow:hidden; border:1px solid var(--line); border-radius:13px; background:#fff; transition:border-color .2s,transform .2s,box-shadow .2s; }
+  .feature-visual:hover { border-color:#9ec5b2; box-shadow:0 12px 28px rgba(32,37,34,.08); transform:translateY(-2px); }
+  .feature-visual img { display:block; width:100%; aspect-ratio:1.8; object-fit:cover; mix-blend-mode:multiply; }
+  .feature-visual>div { display:grid; align-content:start; gap:8px; padding:16px 17px 18px; }
+  .feature-visual .eyebrow { margin:0; }
+  .feature-visual h3 { max-width:360px; font-size:21px; letter-spacing:-.035em; }
+  .feature-visual b { color:var(--accent); font-size:12px; }
   .hero-links { display:flex; gap:22px; flex-wrap:wrap; align-items:center; margin-top:10px; color:var(--accent); font-size:13px; }.hero-links .button { color:var(--ink); }.hero-links .button:hover { color:var(--paper); }
   .section-heading { display:flex; justify-content:space-between; align-items:end; gap:24px; }.field-map { display:grid; grid-template-columns:repeat(2,1fr); margin-top:45px; border-top:1px solid var(--line); border-left:1px solid var(--line); }.field-map a { min-height:190px; padding:19px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }.field-map a:hover { background:var(--soft); }.field-map span,.latest-kind { color:var(--accent); font-size:11px; }.field-map strong { display:block; margin-top:33px; font-size:22px; letter-spacing:-.04em; }.field-map p { margin:8px 0 20px; color:#5d655d; font-size:13px; }.field-map b,.small-link { color:var(--accent); font-size:12px; }
   .latest-list { margin-top:45px; border-top:1px solid var(--line); }.latest-list a { display:grid; grid-template-columns:120px 1fr 90px; gap:25px; padding:20px 0; border-bottom:1px solid var(--line); }.latest-list a:hover h3 { color:var(--accent); }.latest-list h3 { font-size:22px; }.latest-list p { margin:5px 0 0; color:#5d655d; font-size:13px; }.latest-list b { color:var(--accent); font-size:12px; text-align:right; }
   .split-section { display:grid; grid-template-columns:1fr 1fr; gap:75px; }.mini-work { border-top:1px solid var(--line); }.mini-work a { display:flex; flex-direction:column; gap:7px; padding:16px 0; border-bottom:1px solid var(--line); }.mini-work a:hover strong { color:var(--accent); }.mini-work span,.mini-work b { color:var(--muted); font-size:11px; }.mini-work strong { font-size:21px; }.interest-block { display:grid; grid-template-columns:1fr 1fr; gap:80px; }.copy { max-width:580px; margin:0 0 24px; color:#555d56; font-size:17px; }.interest-tags { display:flex; flex-wrap:wrap; gap:7px; }.interest-tags span { padding:5px 9px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:11px; }
-  @media(max-width:700px) { .current-signal,.split-section,.interest-block { grid-template-columns:1fr; gap:28px; }.field-map { grid-template-columns:1fr; }.latest-list a { grid-template-columns:1fr; gap:7px; }.latest-list b { text-align:left; }.section-heading { align-items:start; flex-direction:column; } }
+  @media(max-width:700px) { .home-hero { grid-template-columns:1fr; gap:26px; }.hero-art { order:-1; }.feature-visuals { grid-template-columns:1fr; margin-top:32px; }.current-signal,.split-section,.interest-block { grid-template-columns:1fr; gap:28px; }.field-map { grid-template-columns:1fr; }.latest-list a { grid-template-columns:1fr; gap:7px; }.latest-list b { text-align:left; }.section-heading { align-items:start; flex-direction:column; } }
 </style>
